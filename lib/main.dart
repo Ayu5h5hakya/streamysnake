@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:solarium/tetromino/o_block.dart';
 
 import 'tetromino/j_block.dart';
 import 'tetromino/l_block.dart';
+import 'tetromino/s_block.dart';
+import 'tetromino/t_block.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +34,7 @@ class TetrisBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: LBlock(),
+      painter: TBlock(),
       child: Container(),
     );
   }
