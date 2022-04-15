@@ -29,7 +29,7 @@ class LBlock extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.teal
+      ..color = Colors.blue
       ..strokeWidth = 5
       ..strokeCap = StrokeCap.round;
     canvas.drawRect(

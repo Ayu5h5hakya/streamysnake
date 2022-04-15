@@ -29,7 +29,7 @@ class SBlock extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.teal
+      ..color = Colors.orange
       ..strokeWidth = 5
       ..strokeCap = StrokeCap.round;
     canvas.drawRect(

@@ -29,7 +29,7 @@ class JBlock extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.teal
+      ..color = Colors.green
       ..strokeWidth = 5
       ..strokeCap = StrokeCap.round;
     canvas.drawRect(

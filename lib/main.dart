@@ -27,15 +27,20 @@ class TetrisBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 30,
-      ),
-      itemBuilder: (_, index) => DecoratedBox(
-          decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-      )),
-      itemCount: 364,
+    return Stack(
+      children: [
+        GridView.builder(
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 30,
+          ),
+          itemBuilder: (_, index) => DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+          ),
+          itemCount: 364,
+        )
+      ],
     );
   }
 }
