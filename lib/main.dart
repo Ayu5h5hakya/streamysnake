@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+
+import 'tetromino/i_block.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,7 +43,11 @@ class TetrisBoard extends StatelessWidget {
             ),
           ),
           itemCount: 364,
-        )
+        ),
+        CustomPaint(
+          child: Container(),
+          painter: const IBlock(origin: Point(0, 0)),
+        ),
       ],
     );
   }
