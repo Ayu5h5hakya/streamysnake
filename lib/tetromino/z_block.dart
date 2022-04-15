@@ -21,49 +21,38 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
 
 class ZBlock extends CustomPainter {
+  final Point<double> origin;
+  const ZBlock({required this.origin});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.teal
+      ..color = Colors.blue
       ..strokeWidth = 5
       ..strokeCap = StrokeCap.round;
-    canvas.drawRect(
-        const Rect.fromLTWH(
-          0,
-          0,
-          BLOCK_SIZE,
-          BLOCK_SIZE,
-        ),
-        paint);
-    canvas.drawRect(
-        const Rect.fromLTWH(
-          BLOCK_SIZE * 1,
-          0,
-          BLOCK_SIZE,
-          BLOCK_SIZE,
-        ),
-        paint);
-    canvas.drawRect(
-        const Rect.fromLTWH(
-          BLOCK_SIZE,
-          BLOCK_SIZE,
-          BLOCK_SIZE,
-          BLOCK_SIZE,
-        ),
-        paint);
-    canvas.drawRect(
-        const Rect.fromLTWH(
-          BLOCK_SIZE * 2,
-          BLOCK_SIZE * 1,
-          BLOCK_SIZE,
-          BLOCK_SIZE,
-        ),
-        paint);
+
+    final _origins = [
+      origin,
+      Point(origin.x + BLOCK_SIZE, origin.y),
+      Point(origin.x + BLOCK_SIZE, origin.y + BLOCK_SIZE),
+      Point(origin.x + BLOCK_SIZE * 2, origin.y + BLOCK_SIZE),
+    ];
+    for (final point in _origins) {
+      canvas.drawRect(
+          Rect.fromLTWH(
+            point.x,
+            point.y,
+            BLOCK_SIZE,
+            BLOCK_SIZE,
+          ),
+          paint);
+    }
   }
 
   @override

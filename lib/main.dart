@@ -3,6 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'tetromino/i_block.dart';
+import 'tetromino/j_block.dart';
+import 'tetromino/l_block.dart';
+import 'tetromino/o_block.dart';
+import 'tetromino/s_block.dart';
+import 'tetromino/t_block.dart';
+import 'tetromino/z_block.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,10 +50,34 @@ class TetrisBoard extends StatelessWidget {
           ),
           itemCount: 364,
         ),
+        // CustomPaint(
+        //   child: Container(),
+        //   painter: const IBlock(origin: Point(30, 30)),
+        // ),
         CustomPaint(
           child: Container(),
-          painter: const IBlock(origin: Point(0, 0)),
+          painter: const JBlock(origin: Point(90, 90)),
         ),
+        // CustomPaint(
+        //   child: Container(),
+        //   painter: const LBlock(origin: Point(90, 90)),
+        // ),
+        // CustomPaint(
+        //   child: Container(),
+        //   painter: const OBlock(origin: Point(90, 90)),
+        // ),
+        // CustomPaint(
+        //   child: Container(),
+        //   painter: const SBlock(origin: Point(90, 90)),
+        // ),
+        // CustomPaint(
+        //   child: Container(),
+        //   painter: const TBlock(origin: Point(90, 90)),
+        // ),
+        // CustomPaint(
+        //   child: Container(),
+        //   painter: const ZBlock(origin: Point(120, 120)),
+        // ),
       ],
     );
   }

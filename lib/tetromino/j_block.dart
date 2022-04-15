@@ -21,49 +21,37 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
 
 class JBlock extends CustomPainter {
+  final Point<double> origin;
+  const JBlock({required this.origin});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = Colors.green
       ..strokeWidth = 5
       ..strokeCap = StrokeCap.round;
-    canvas.drawRect(
-        const Rect.fromLTWH(
-          0,
-          0,
-          BLOCK_SIZE,
-          BLOCK_SIZE,
-        ),
-        paint);
-    canvas.drawRect(
-        const Rect.fromLTWH(
-          0,
-          BLOCK_SIZE,
-          BLOCK_SIZE,
-          BLOCK_SIZE,
-        ),
-        paint);
-    canvas.drawRect(
-        const Rect.fromLTWH(
-          BLOCK_SIZE,
-          BLOCK_SIZE,
-          BLOCK_SIZE,
-          BLOCK_SIZE,
-        ),
-        paint);
-    canvas.drawRect(
-        const Rect.fromLTWH(
-          BLOCK_SIZE * 2,
-          BLOCK_SIZE,
-          BLOCK_SIZE,
-          BLOCK_SIZE,
-        ),
-        paint);
+    final _origins = [
+      origin,
+      Point(origin.x, origin.y + BLOCK_SIZE),
+      Point(origin.x, origin.y + BLOCK_SIZE * 2),
+      Point(origin.x - BLOCK_SIZE, origin.y + BLOCK_SIZE * 2),
+    ];
+    for (final point in _origins) {
+      canvas.drawRect(
+          Rect.fromLTWH(
+            point.x,
+            point.y,
+            BLOCK_SIZE,
+            BLOCK_SIZE,
+          ),
+          paint);
+    }
   }
 
   @override
