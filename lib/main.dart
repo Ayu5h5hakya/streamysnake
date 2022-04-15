@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'tetromino/z_block.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,9 +27,15 @@ class TetrisBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: ZBlock(),
-      child: Container(),
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 30,
+      ),
+      itemBuilder: (_, index) => DecoratedBox(
+          decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300),
+      )),
+      itemCount: 364,
     );
   }
 }
