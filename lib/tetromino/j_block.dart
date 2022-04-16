@@ -26,23 +26,54 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class JBlock extends CustomPainter {
+  final double angle;
   final double width;
   final Point<double> origin;
-  const JBlock({required this.width, required this.origin});
+  const JBlock({this.angle = 270, required this.width, required this.origin});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = Colors.green
       ..style = PaintingStyle.fill;
 
-    final path = Path()
-      ..moveTo(origin.x, origin.y)
-      ..lineTo(origin.x + width, origin.y)
-      ..lineTo(origin.x + width, origin.y + width * 3)
-      ..lineTo(origin.x - width, origin.y + width * 3)
-      ..lineTo(origin.x - width, origin.y + width * 2)
-      ..lineTo(origin.x, origin.y + width * 2)
-      ..close();
+    Path path;
+    if (angle == 90) {
+      path = Path()
+        ..moveTo(origin.x + width, origin.y)
+        ..lineTo(origin.x + width * 3, origin.y)
+        ..lineTo(origin.x + width * 3, origin.y + width)
+        ..lineTo(origin.x + width * 2, origin.y + width)
+        ..lineTo(origin.x + width * 2, origin.y + width * 3)
+        ..lineTo(origin.x + width, origin.y + width * 3)
+        ..close();
+    } else if (angle == 180) {
+      path = Path()
+        ..moveTo(origin.x, origin.y + width)
+        ..lineTo(origin.x + width * 3, origin.y + width)
+        ..lineTo(origin.x + width * 3, origin.y + width * 3)
+        ..lineTo(origin.x + width * 2, origin.y + width * 3)
+        ..lineTo(origin.x + width * 2, origin.y + width * 2)
+        ..lineTo(origin.x, origin.y + width * 2)
+        ..close();
+    } else if (angle == 270) {
+      path = Path()
+        ..moveTo(origin.x + width, origin.y)
+        ..lineTo(origin.x + width * 2, origin.y)
+        ..lineTo(origin.x + width * 2, origin.y + width * 3)
+        ..lineTo(origin.x, origin.y + width * 3)
+        ..lineTo(origin.x, origin.y + width * 2)
+        ..lineTo(origin.x + width, origin.y + width * 2)
+        ..close();
+    } else {
+      path = Path()
+        ..moveTo(origin.x, origin.y)
+        ..lineTo(origin.x + width, origin.y)
+        ..lineTo(origin.x + width, origin.y + width)
+        ..lineTo(origin.x + width * 3, origin.y + width)
+        ..lineTo(origin.x + width * 3, origin.y + width * 2)
+        ..lineTo(origin.x, origin.y + width * 2)
+        ..close();
+    }
     canvas.drawPath(path, paint);
   }
 

@@ -35,8 +35,7 @@ class ZBlock extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = Colors.blue
-      ..strokeWidth = 5
-      ..strokeCap = StrokeCap.round;
+      ..style = PaintingStyle.fill;
 
     final path = Path()
       ..moveTo(origin.x, origin.y)

@@ -27,19 +27,29 @@ import 'package:flutter/material.dart';
 
 class IBlock extends CustomPainter {
   final double width;
+  final double angle;
   final Point<double> origin;
-  const IBlock({required this.width, required this.origin});
+  const IBlock({this.angle = 0, required this.width, required this.origin});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = Colors.teal
       ..style = PaintingStyle.fill;
-
-    final path = Path()
-      ..lineTo(origin.x + width * 4, 0)
-      ..lineTo(origin.x + width * 4, origin.y + width)
-      ..lineTo(origin.x, origin.y + width)
-      ..close();
+    Path path;
+    if (angle == 90 || angle == 270) {
+      path = Path()
+        ..moveTo(origin.x + width * 2, origin.y)
+        ..lineTo(origin.x + width * 3, origin.y)
+        ..lineTo(origin.x + width * 3, origin.y + width * 4)
+        ..lineTo(origin.x + width * 2, origin.y + width * 4)
+        ..close();
+    } else {
+      path = Path()
+        ..lineTo(origin.x + width * 4, 0)
+        ..lineTo(origin.x + width * 4, origin.y + width)
+        ..lineTo(origin.x, origin.y + width)
+        ..close();
+    }
     canvas.drawPath(path, paint);
   }
 
