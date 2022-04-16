@@ -38,22 +38,17 @@ class ZBlock extends CustomPainter {
       ..strokeWidth = 5
       ..strokeCap = StrokeCap.round;
 
-    final _origins = [
-      origin,
-      Point(origin.x + width, origin.y),
-      Point(origin.x + width, origin.y + width),
-      Point(origin.x + width * 2, origin.y + width),
-    ];
-    for (final point in _origins) {
-      canvas.drawRect(
-          Rect.fromLTWH(
-            point.x,
-            point.y,
-            width,
-            width,
-          ),
-          paint);
-    }
+    final path = Path()
+      ..moveTo(origin.x, origin.y)
+      ..lineTo(origin.x + width * 2, origin.y)
+      ..lineTo(origin.x + width * 2, origin.y + width)
+      ..lineTo(origin.x + width * 3, origin.y + width)
+      ..lineTo(origin.x + width * 3, origin.y + width * 2)
+      ..lineTo(origin.x + width, origin.y + width * 2)
+      ..lineTo(origin.x + width, origin.y + width)
+      ..lineTo(origin.x, origin.y + width)
+      ..close();
+    canvas.drawPath(path, paint);
   }
 
   @override
