@@ -44,24 +44,6 @@ class JBlock extends CustomPainter {
       ..lineTo(origin.x, origin.y + width * 2)
       ..close();
     canvas.drawPath(path, paint);
-
-    // final paint = Paint()..color = Colors.green;
-    // final _origins = [
-    //   origin,
-    //   Point(origin.x, origin.y + width),
-    //   Point(origin.x, origin.y + width * 2),
-    //   Point(origin.x - width, origin.y + width * 2),
-    // ];
-    // for (final point in _origins) {
-    //   canvas.drawRect(
-    //       Rect.fromLTWH(
-    //         point.x,
-    //         point.y,
-    //         width,
-    //         width,
-    //       ),
-    //       paint);
-    // }
   }
 
   @override

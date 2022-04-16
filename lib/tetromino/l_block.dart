@@ -35,25 +35,17 @@ class LBlock extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = Colors.blue
-      ..strokeWidth = 5
-      ..strokeCap = StrokeCap.round;
+      ..style = PaintingStyle.fill;
 
-    final _origins = [
-      origin,
-      Point(origin.x, origin.y + width),
-      Point(origin.x, origin.y + width * 2),
-      Point(origin.x + width, origin.y + width * 2),
-    ];
-    for (final point in _origins) {
-      canvas.drawRect(
-          Rect.fromLTWH(
-            point.x,
-            point.y,
-            width,
-            width,
-          ),
-          paint);
-    }
+    final path = Path()
+      ..moveTo(origin.x, origin.y)
+      ..lineTo(origin.x + width, origin.y)
+      ..lineTo(origin.x + width, origin.y + width * 2)
+      ..lineTo(origin.x + width * 2, origin.y + width * 2)
+      ..lineTo(origin.x + width * 2, origin.y + width * 3)
+      ..lineTo(origin.x, origin.y + width * 3)
+      ..close();
+    canvas.drawPath(path, paint);
   }
 
   @override
