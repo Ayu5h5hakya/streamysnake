@@ -25,8 +25,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
-
 class IBlock extends CustomPainter {
   final double width;
   final Point<double> origin;
@@ -34,26 +32,15 @@ class IBlock extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.red
-      ..strokeWidth = 5
-      ..strokeCap = StrokeCap.round;
+      ..color = Colors.teal
+      ..style = PaintingStyle.fill;
 
-    final _origins = [
-      origin,
-      Point(origin.x + width, origin.y),
-      Point(origin.x + width * 2, origin.y),
-      Point(origin.x + width * 3, origin.y),
-    ];
-    for (final point in _origins) {
-      canvas.drawRect(
-          Rect.fromLTWH(
-            point.x,
-            point.y,
-            width,
-            width,
-          ),
-          paint);
-    }
+    final path = Path()
+      ..lineTo(origin.x + width * 4, 0)
+      ..lineTo(origin.x + width * 4, origin.y + width)
+      ..lineTo(origin.x, origin.y + width)
+      ..close();
+    canvas.drawPath(path, paint);
   }
 
   @override

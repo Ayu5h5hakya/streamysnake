@@ -70,71 +70,77 @@ class TetrisBoard extends StatelessWidget {
             ),
           ),
         ),
-        Center(
-          child: SizedBox(
-            width: _width,
-            height: _height,
-            child: CustomPaint(
-              painter: JBlock(width: _maxExtent, origin: const Point(30, 30)),
-            ),
-          ),
-        ),
-        Center(
-          child: SizedBox(
-            width: _width,
-            height: _height,
-            child: CustomPaint(
-              painter: LBlock(width: _maxExtent, origin: const Point(60, 60)),
-            ),
-          ),
-        ),
-        Center(
-          child: SizedBox(
-            width: _width,
-            height: _height,
-            child: CustomPaint(
-              painter: OBlock(width: _maxExtent, origin: const Point(120, 120)),
-            ),
-          ),
-        ),
-        Center(
-          child: SizedBox(
-            width: _width,
-            height: _height,
-            child: CustomPaint(
-              painter: SBlock(width: _maxExtent, origin: const Point(150, 180)),
-            ),
-          ),
-        ),
-        Center(
-          child: SizedBox(
-            width: _width,
-            height: _height,
-            child: CustomPaint(
-              painter: TBlock(width: _maxExtent, origin: const Point(90, 180)),
-            ),
-          ),
-        ),
-        Center(
-          child: SizedBox(
-            width: _width,
-            height: _height,
-            child: CustomPaint(
-              painter: ZBlock(width: _maxExtent, origin: const Point(90, 270)),
-            ),
-          ),
-        ),
-        // CustomPaint(
-        //   child: Container(),
-        //   painter: const SBlock(origin: Point(90, 90)),
+        // Center(
+        //   child: SizedBox(
+        //     width: _width,
+        //     height: _height,
+        //     child: CustomPaint(
+        //       painter: JBlock(
+        //         width: _maxExtent,
+        //         origin: const Point(30, 30),
+        //       ),
+        //     ),
+        //   ),
         // ),
-        // CustomPaint(
-        //   child: Container(),
-        //   painter: const TBlock(origin: Point(90, 90)),
+        // Center(
+        //   child: SizedBox(
+        //     width: _width,
+        //     height: _height,
+        //     child: CustomPaint(
+        //       painter: LBlock(
+        //         width: _maxExtent,
+        //         origin: const Point(60, 60),
+        //       ),
+        //     ),
+        //   ),
         // ),
-        // CustomPaint(
-        //   child: Container(),
-        //   painter: const ZBlock(origin: Point(120, 120)),
+        // Center(
+        //   child: SizedBox(
+        //     width: _width,
+        //     height: _height,
+        //     child: CustomPaint(
+        //       painter: OBlock(
+        //         width: _maxExtent,
+        //         origin: const Point(120, 120),
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        // Center(
+        //   child: SizedBox(
+        //     width: _width,
+        //     height: _height,
+        //     child: CustomPaint(
+        //       painter: SBlock(
+        //         width: _maxExtent,
+        //         origin: const Point(150, 180),
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        // Center(
+        //   child: SizedBox(
+        //     width: _width,
+        //     height: _height,
+        //     child: CustomPaint(
+        //       painter: TBlock(
+        //         width: _maxExtent,
+        //         origin: const Point(90, 180),
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        // Center(
+        //   child: SizedBox(
+        //     width: _width,
+        //     height: _height,
+        //     child: CustomPaint(
+        //       painter: ZBlock(
+        //         width: _maxExtent,
+        //         origin: const Point(90, 270),
+        //       ),
+        //     ),
+        //   ),
         // ),
       ],
     );
