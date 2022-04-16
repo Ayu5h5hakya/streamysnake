@@ -41,7 +41,6 @@ class TetrisBoard extends StatelessWidget {
     final _width = MediaQuery.of(context).size.width * 0.7;
     final _height = MediaQuery.of(context).size.height * 0.75;
     final _maxExtent = sqrt(_width * _height / 640);
-    final _columns = _width / _maxExtent;
     return Stack(
       children: [
         Center(
@@ -58,30 +57,73 @@ class TetrisBoard extends StatelessWidget {
                   border: Border.all(color: Colors.grey.shade300),
                 ),
               ),
-              itemCount: 640 + _columns.toInt(),
+              itemCount: 648,
             ),
           ),
         ),
         Center(
-            child: SizedBox(
-          width: _width,
-          height: _height,
-          child: CustomPaint(
-            painter: JBlock(width: _maxExtent, origin: const Point(0, 0)),
+          child: SizedBox(
+            width: _width,
+            height: _height,
+            child: CustomPaint(
+              painter: IBlock(width: _maxExtent, origin: const Point(0, 0)),
+            ),
           ),
-        )),
-        // CustomPaint(
-        //   child: Container(),
-        //   painter: const JBlock(origin: Point(90, 90)),
-        // ),
-        // CustomPaint(
-        //   child: Container(),
-        //   painter: const LBlock(origin: Point(90, 90)),
-        // ),
-        // CustomPaint(
-        //   child: Container(),
-        //   painter: const OBlock(origin: Point(90, 90)),
-        // ),
+        ),
+        Center(
+          child: SizedBox(
+            width: _width,
+            height: _height,
+            child: CustomPaint(
+              painter: JBlock(width: _maxExtent, origin: const Point(30, 30)),
+            ),
+          ),
+        ),
+        Center(
+          child: SizedBox(
+            width: _width,
+            height: _height,
+            child: CustomPaint(
+              painter: LBlock(width: _maxExtent, origin: const Point(60, 60)),
+            ),
+          ),
+        ),
+        Center(
+          child: SizedBox(
+            width: _width,
+            height: _height,
+            child: CustomPaint(
+              painter: OBlock(width: _maxExtent, origin: const Point(120, 120)),
+            ),
+          ),
+        ),
+        Center(
+          child: SizedBox(
+            width: _width,
+            height: _height,
+            child: CustomPaint(
+              painter: SBlock(width: _maxExtent, origin: const Point(150, 180)),
+            ),
+          ),
+        ),
+        Center(
+          child: SizedBox(
+            width: _width,
+            height: _height,
+            child: CustomPaint(
+              painter: TBlock(width: _maxExtent, origin: const Point(90, 180)),
+            ),
+          ),
+        ),
+        Center(
+          child: SizedBox(
+            width: _width,
+            height: _height,
+            child: CustomPaint(
+              painter: ZBlock(width: _maxExtent, origin: const Point(90, 270)),
+            ),
+          ),
+        ),
         // CustomPaint(
         //   child: Container(),
         //   painter: const SBlock(origin: Point(90, 90)),

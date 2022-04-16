@@ -28,8 +28,9 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class LBlock extends CustomPainter {
+  final double width;
   final Point<double> origin;
-  const LBlock({required this.origin});
+  const LBlock({required this.width, required this.origin});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
@@ -39,17 +40,17 @@ class LBlock extends CustomPainter {
 
     final _origins = [
       origin,
-      Point(origin.x, origin.y + BLOCK_SIZE),
-      Point(origin.x, origin.y + BLOCK_SIZE * 2),
-      Point(origin.x + BLOCK_SIZE, origin.y + BLOCK_SIZE * 2),
+      Point(origin.x, origin.y + width),
+      Point(origin.x, origin.y + width * 2),
+      Point(origin.x + width, origin.y + width * 2),
     ];
     for (final point in _origins) {
       canvas.drawRect(
           Rect.fromLTWH(
             point.x,
             point.y,
-            BLOCK_SIZE,
-            BLOCK_SIZE,
+            width,
+            width,
           ),
           paint);
     }
