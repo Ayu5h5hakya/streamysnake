@@ -41,39 +41,39 @@ class LBlock extends CustomPainter {
     Path path;
     if (angle == 90) {
       path = Path()
-        ..moveTo(origin.x + width, origin.y - width)
-        ..lineTo(origin.x + width * 2, origin.y - width)
-        ..lineTo(origin.x + width * 2, origin.y + width)
-        ..lineTo(origin.x + width * 3, origin.y + width)
-        ..lineTo(origin.x + width * 3, origin.y + width * 2)
-        ..lineTo(origin.x + width, origin.y + width * 2)
+        ..moveTo(origin.x + width, origin.y)
+        ..relativeLineTo(width * 2, 0)
+        ..relativeLineTo(0, width)
+        ..relativeLineTo(-width, 0)
+        ..relativeLineTo(0, 2 * width)
+        ..relativeLineTo(-width, 0)
         ..close();
     } else if (angle == 180) {
       path = Path()
         ..moveTo(origin.x, origin.y + width)
-        ..lineTo(origin.x + width * 3, origin.y + width)
-        ..lineTo(origin.x + width * 3, origin.y + width * 2)
-        ..lineTo(origin.x + width * 2, origin.y + width * 3)
-        ..lineTo(origin.x + width, origin.y + width)
-        ..lineTo(origin.x, origin.y + width * 3)
+        ..relativeLineTo(width * 3, 0)
+        ..relativeLineTo(0, width * 2)
+        ..relativeLineTo(-width, 0)
+        ..relativeLineTo(0, -width)
+        ..relativeLineTo(-2 * width, 0)
         ..close();
     } else if (angle == 270) {
       path = Path()
-        ..moveTo(origin.x, origin.y)
-        ..lineTo(origin.x + width * 2, origin.y)
-        ..lineTo(origin.x + width * 2, origin.y + width * 3)
-        ..lineTo(origin.x + width, origin.y + width * 3)
-        ..lineTo(origin.x + width, origin.y + width)
-        ..lineTo(origin.x, origin.y + width)
+        ..moveTo(origin.x + width, origin.y)
+        ..relativeLineTo(width, 0)
+        ..relativeLineTo(0, width * 3)
+        ..relativeLineTo(-2 * width, 0)
+        ..relativeLineTo(0, -width)
+        ..relativeLineTo(width, 0)
         ..close();
     } else {
       path = Path()
-        ..moveTo(origin.x, origin.y + width)
-        ..lineTo(origin.x + width * 2, origin.y + width)
-        ..lineTo(origin.x + width * 2, origin.y)
-        ..lineTo(origin.x + width * 3, origin.y)
-        ..lineTo(origin.x + width * 3, origin.y + width * 2)
-        ..lineTo(origin.x, origin.y + width * 2)
+        ..moveTo(origin.x, origin.y)
+        ..relativeLineTo(width, 0)
+        ..relativeLineTo(0, width)
+        ..relativeLineTo(2 * width, 0)
+        ..relativeLineTo(0, width)
+        ..relativeLineTo(-3 * width, 0)
         ..close();
     }
     canvas.drawPath(path, paint);
