@@ -61,19 +61,19 @@ class TetrisBoard extends StatelessWidget {
             ),
           ),
         ),
-        Center(
-          child: SizedBox(
-            width: _width,
-            height: _height,
-            child: CustomPaint(
-              painter: IBlock(
-                angle: 90,
-                width: _maxExtent,
-                origin: const Point(210, 210),
-              ),
-            ),
-          ),
-        ),
+        // Center(
+        //   child: SizedBox(
+        //     width: _width,
+        //     height: _height,
+        //     child: CustomPaint(
+        //       painter: IBlock(
+        //         angle: 90,
+        //         width: _maxExtent,
+        //         origin: const Point(210, 210),
+        //       ),
+        //     ),
+        //   ),
+        // ),
         // Center(
         //   child: SizedBox(
         //     width: _width,
@@ -86,18 +86,18 @@ class TetrisBoard extends StatelessWidget {
         //     ),
         //   ),
         // ),
-        Center(
-          child: SizedBox(
-            width: _width,
-            height: _height,
-            child: CustomPaint(
-              painter: LBlock(
-                width: _maxExtent,
-                origin: const Point(60, 60),
-              ),
-            ),
-          ),
-        ),
+        // Center(
+        //   child: SizedBox(
+        //     width: _width,
+        //     height: _height,
+        //     child: CustomPaint(
+        //       painter: LBlock(
+        //         width: _maxExtent,
+        //         origin: const Point(60, 60),
+        //       ),
+        //     ),
+        //   ),
+        // ),
         // Center(
         //   child: SizedBox(
         //     width: _width,
@@ -134,18 +134,18 @@ class TetrisBoard extends StatelessWidget {
         //     ),
         //   ),
         // ),
-        // Center(
-        //   child: SizedBox(
-        //     width: _width,
-        //     height: _height,
-        //     child: CustomPaint(
-        //       painter: ZBlock(
-        //         width: _maxExtent,
-        //         origin: const Point(90, 270),
-        //       ),
-        //     ),
-        //   ),
-        // ),
+        Center(
+          child: SizedBox(
+            width: _width,
+            height: _height,
+            child: CustomPaint(
+              painter: ZBlock(
+                width: _maxExtent,
+                origin: const Point(90, 270),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
