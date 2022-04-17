@@ -28,25 +28,61 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class SBlock extends CustomPainter {
+  final double angle;
   final double width;
   final Point<double> origin;
-  const SBlock({required this.width, required this.origin});
+  const SBlock({this.angle = 0, required this.width, required this.origin});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.yellowAccent
+      ..color = Colors.pinkAccent
       ..style = PaintingStyle.fill;
-
-    final path = Path()
-      ..moveTo(origin.x, origin.y)
-      ..lineTo(origin.x + width * 2, origin.y)
-      ..lineTo(origin.x + width * 2, origin.y + width)
-      ..lineTo(origin.x + width, origin.y + width)
-      ..lineTo(origin.x + width, origin.y + width * 2)
-      ..lineTo(origin.x - width, origin.y + width * 2)
-      ..lineTo(origin.x - width, origin.y + width)
-      ..lineTo(origin.x, origin.y + width)
-      ..close();
+    Path path;
+    if (angle == 90) {
+      path = Path()
+        ..moveTo(origin.x + width, origin.y)
+        ..relativeLineTo(width, 0)
+        ..relativeLineTo(0, width)
+        ..relativeLineTo(width, 0)
+        ..relativeLineTo(0, width * 2)
+        ..relativeLineTo(-width, 0)
+        ..relativeLineTo(0, -width)
+        ..relativeLineTo(-width, 0)
+        ..close();
+    } else if (angle == 180) {
+      path = Path()
+        ..moveTo(origin.x + width, origin.y + width)
+        ..relativeLineTo(width * 2, 0)
+        ..relativeLineTo(0, width)
+        ..relativeLineTo(-width, 0)
+        ..relativeLineTo(0, width)
+        ..relativeLineTo(-width * 2, 0)
+        ..relativeLineTo(0, -width)
+        ..relativeLineTo(width, 0)
+        ..close();
+    } else if (angle == 270) {
+      path = Path()
+        ..moveTo(origin.x, origin.y)
+        ..relativeLineTo(width, 0)
+        ..relativeLineTo(0, width)
+        ..relativeLineTo(width, 0)
+        ..relativeLineTo(0, width * 2)
+        ..relativeLineTo(-width, 0)
+        ..relativeLineTo(0, -width)
+        ..relativeLineTo(-width, 0)
+        ..close();
+    } else {
+      path = Path()
+        ..moveTo(origin.x + width, origin.y)
+        ..relativeLineTo(width * 2, 0)
+        ..relativeLineTo(0, width)
+        ..relativeLineTo(-width, 0)
+        ..relativeLineTo(0, width)
+        ..relativeLineTo(-width * 2, 0)
+        ..relativeLineTo(0, -width)
+        ..relativeLineTo(width, 0)
+        ..close();
+    }
     canvas.drawPath(path, paint);
   }
 
