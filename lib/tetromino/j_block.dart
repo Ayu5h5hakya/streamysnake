@@ -29,7 +29,7 @@ class JBlock extends CustomPainter {
   final double angle;
   final double width;
   final Point<double> origin;
-  const JBlock({this.angle = 270, required this.width, required this.origin});
+  const JBlock({this.angle = 0, required this.width, required this.origin});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()

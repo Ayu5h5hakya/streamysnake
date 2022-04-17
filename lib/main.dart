@@ -61,31 +61,30 @@ class TetrisBoard extends StatelessWidget {
             ),
           ),
         ),
-        // Center(
-        //   child: SizedBox(
-        //     width: _width,
-        //     height: _height,
-        //     child: CustomPaint(
-        //       painter: IBlock(
-        //         angle: 90,
-        //         width: _maxExtent,
-        //         origin: const Point(210, 210),
-        //       ),
-        //     ),
-        //   ),
-        // ),
         Center(
           child: SizedBox(
             width: _width,
             height: _height,
             child: CustomPaint(
-              painter: JBlock(
+              painter: IBlock(
                 width: _maxExtent,
-                origin: const Point(30, 30),
+                origin: const Point(210, 210),
               ),
             ),
           ),
         ),
+        // Center(
+        //   child: SizedBox(
+        //     width: _width,
+        //     height: _height,
+        //     child: CustomPaint(
+        //       painter: JBlock(
+        //         width: _maxExtent,
+        //         origin: const Point(30, 30),
+        //       ),
+        //     ),
+        //   ),
+        // ),
         // Center(
         //   child: SizedBox(
         //     width: _width,

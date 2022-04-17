@@ -39,15 +39,16 @@ class IBlock extends CustomPainter {
     if (angle == 90 || angle == 270) {
       path = Path()
         ..moveTo(origin.x + width * 2, origin.y)
-        ..lineTo(origin.x + width * 3, origin.y)
-        ..lineTo(origin.x + width * 3, origin.y + width * 4)
-        ..lineTo(origin.x + width * 2, origin.y + width * 4)
+        ..relativeLineTo(width, 0)
+        ..relativeLineTo(0, width * 4)
+        ..relativeLineTo(-width, 0)
         ..close();
     } else {
       path = Path()
-        ..lineTo(origin.x + width * 4, 0)
-        ..lineTo(origin.x + width * 4, origin.y + width)
-        ..lineTo(origin.x, origin.y + width)
+        ..moveTo(origin.x, origin.y)
+        ..relativeLineTo(width * 4, 0)
+        ..relativeLineTo(0, width)
+        ..relativeLineTo(-width * 4, 0)
         ..close();
     }
     canvas.drawPath(path, paint);
