@@ -2,15 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'constants.dart';
+import 'board.dart';
 import 'player.dart';
-import 'tetromino/i_block.dart';
-import 'tetromino/j_block.dart';
-import 'tetromino/l_block.dart';
-import 'tetromino/o_block.dart';
-import 'tetromino/s_block.dart';
-import 'tetromino/t_block.dart';
-import 'tetromino/z_block.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,15 +20,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Scaffold(
-        body: TetrisBoard(),
+      home: Scaffold(
+        body: Tetris(),
       ),
     );
   }
 }
 
-class TetrisBoard extends StatelessWidget {
-  const TetrisBoard({Key? key}) : super(key: key);
+class Tetris extends StatelessWidget {
+  const Tetris({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,23 +39,9 @@ class TetrisBoard extends StatelessWidget {
     return Stack(
       children: [
         Center(
-          child: FractionallySizedBox(
-            widthFactor: 0.7,
-            heightFactor: 0.75,
-            child: GridView.builder(
-              padding: EdgeInsets.zero,
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: _maxExtent,
-              ),
-              itemBuilder: (_, index) => DecoratedBox(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-              ),
-              itemCount: 648,
-            ),
-          ),
-        ),
+            child: TetrisBoard(
+          extent: _maxExtent,
+        )),
         Player(
           boardWidth: _width,
           boardHeight: _height,
