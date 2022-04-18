@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
+import 'player.dart';
 import 'tetromino/i_block.dart';
 import 'tetromino/j_block.dart';
 import 'tetromino/l_block.dart';
@@ -41,6 +42,7 @@ class TetrisBoard extends StatelessWidget {
     final _width = MediaQuery.of(context).size.width * 0.7;
     final _height = MediaQuery.of(context).size.height * 0.75;
     final _maxExtent = sqrt(_width * _height / 640);
+
     return Stack(
       children: [
         Center(
@@ -61,90 +63,11 @@ class TetrisBoard extends StatelessWidget {
             ),
           ),
         ),
-        Center(
-          child: SizedBox(
-            width: _width,
-            height: _height,
-            child: CustomPaint(
-              painter: IBlock(
-                width: _maxExtent,
-                origin: const Point(210, 210),
-              ),
-            ),
-          ),
+        Player(
+          boardWidth: _width,
+          boardHeight: _height,
+          extent: _maxExtent,
         ),
-        // Center(
-        //   child: SizedBox(
-        //     width: _width,
-        //     height: _height,
-        //     child: CustomPaint(
-        //       painter: JBlock(
-        //         width: _maxExtent,
-        //         origin: const Point(30, 30),
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        // Center(
-        //   child: SizedBox(
-        //     width: _width,
-        //     height: _height,
-        //     child: CustomPaint(
-        //       painter: LBlock(
-        //         width: _maxExtent,
-        //         origin: const Point(60, 60),
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        // Center(
-        //   child: SizedBox(
-        //     width: _width,
-        //     height: _height,
-        //     child: CustomPaint(
-        //       painter: OBlock(
-        //         width: _maxExtent,
-        //         origin: const Point(120, 120),
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        // Center(
-        //   child: SizedBox(
-        //     width: _width,
-        //     height: _height,
-        //     child: CustomPaint(
-        //       painter: SBlock(
-        //         width: _maxExtent,
-        //         origin: const Point(150, 180),
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        // Center(
-        //   child: SizedBox(
-        //     width: _width,
-        //     height: _height,
-        //     child: CustomPaint(
-        //       painter: TBlock(
-        //         width: _maxExtent,
-        //         origin: const Point(90, 180),
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        // Center(
-        //   child: SizedBox(
-        //     width: _width,
-        //     height: _height,
-        //     child: CustomPaint(
-        //       painter: ZBlock(
-        //         width: _maxExtent,
-        //         origin: const Point(90, 270),
-        //       ),
-        //     ),
-        //   ),
-        // ),
       ],
     );
   }

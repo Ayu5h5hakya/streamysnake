@@ -26,12 +26,16 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class IBlock extends CustomPainter {
-  final double width;
-  final double angle;
+  final double width, position, angle;
   final Point<double> origin;
-  const IBlock({this.angle = 0, required this.width, required this.origin});
+  const IBlock(
+      {this.angle = 0,
+      this.position = 0,
+      required this.width,
+      required this.origin});
   @override
   void paint(Canvas canvas, Size size) {
+    canvas.translate(0, position);
     final paint = Paint()
       ..color = Colors.teal
       ..style = PaintingStyle.fill;
@@ -55,5 +59,5 @@ class IBlock extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
