@@ -1,12 +1,35 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:rxdart/rxdart.dart';
 
+import 'data/tetrinimo.dart';
+
 class Engine {
-  final List<bool> _gridState = List<bool>.filled(648, false);
-  final List<int> _barrier = List.filled(19, -1);
+  final double width, height, extent;
+  StreamController<Tetrimino> _gameController = StreamController();
+  StreamController<Tetrimino> _playerController = StreamController();
 
-  final StreamController _gameController = StreamController<int>();
+  Engine({required this.width, required this.height, required this.extent}) {
+    _gameController = StreamController();
+    _playerController = StreamController();
 
-  start() => _gameController.stream;
+    _gameController.stream.listen((tetramino) {
+      RangeStream(0, height ~/ extent)
+          .interval(const Duration(seconds: 1))
+          .listen((offset) {
+        _playerController.add(
+          Tetrimino(
+              current: tetramino.current,
+              origin: Point(tetramino.origin.x, tetramino.origin.y),
+              position: offset * extent),
+        );
+      });
+    });
+  }
+  Stream<Tetrimino> get playerStream => _playerController.stream;
+
+  void spawn() {
+    _gameController.add(Tetrimino(current: Piece.J, origin: const Point(0, 0)));
+  }
 }

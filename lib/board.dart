@@ -1,26 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
+import 'main.dart';
 
-import 'engine.dart';
+class TetrisBoard extends StatelessWidget {
+  const TetrisBoard({Key? key}) : super(key: key);
 
-class TetrisBoard extends StatefulWidget {
-  final double extent;
-  const TetrisBoard({Key? key, required this.extent}) : super(key: key);
-
-  @override
-  State<TetrisBoard> createState() => _TetrisBoardState();
-}
-
-class _TetrisBoardState extends State<TetrisBoard> {
   @override
   Widget build(BuildContext context) {
+    final _engine = TetrisController.of(context);
     return FractionallySizedBox(
       widthFactor: 0.7,
       heightFactor: 0.75,
       child: GridView.builder(
         padding: EdgeInsets.zero,
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: widget.extent,
+          maxCrossAxisExtent: _engine.extent,
         ),
         itemBuilder: (_, index) => DecoratedBox(
           decoration: BoxDecoration(

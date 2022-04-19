@@ -1,38 +1,36 @@
-import 'dart:math';
-
 import 'package:flutter/widgets.dart';
-import 'package:rxdart/rxdart.dart';
 
-import 'engine.dart';
+import 'data/tetrinimo.dart';
+import 'main.dart';
 import 'tetromino/i_block.dart';
 
 class Player extends StatelessWidget {
-  final double boardWidth, boardHeight, extent;
   final VoidCallback? onBottomReached;
   Player({
     Key? key,
-    required this.boardWidth,
-    required this.boardHeight,
-    required this.extent,
     this.onBottomReached,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final _engine = TetrisController.of(context);
     return Center(
       child: SizedBox(
-        width: boardWidth,
-        height: boardHeight,
-        child: StreamBuilder<int>(
-          stream: Engine.start(boardHeight ~/ extent),
+        width: _engine.width,
+        height: _engine.height,
+        child: StreamBuilder<Tetrimino>(
+          stream: _engine.playerStream,
           builder: ((context, snapshot) {
-            return CustomPaint(
-              painter: IBlock(
-                width: extent,
-                position: extent * (snapshot.data ?? 1),
-                origin: const Point(0, 0),
-              ),
-            );
+            if (snapshot.hasData)
+              return CustomPaint(
+                painter: IBlock(
+                  width: _engine.extent,
+                  angle: snapshot.data!.angle,
+                  position: snapshot.data!.position,
+                  origin: snapshot.data!.origin,
+                ),
+              );
+            return const SizedBox.shrink();
           }),
         ),
       ),
