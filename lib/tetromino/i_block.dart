@@ -35,7 +35,6 @@ class IBlock extends CustomPainter {
       required this.origin});
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.translate(0, position);
     final paint = Paint()
       ..color = Colors.teal
       ..style = PaintingStyle.fill;
@@ -55,6 +54,7 @@ class IBlock extends CustomPainter {
         ..relativeLineTo(-width * 4, 0)
         ..close();
     }
+    canvas.translate(0, position);
     canvas.drawPath(path, paint);
   }
 

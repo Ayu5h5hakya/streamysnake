@@ -78,6 +78,7 @@ class JBlock extends CustomPainter {
         ..relativeLineTo(-3 * width, 0)
         ..close();
     }
+    canvas.translate(0, position);
     canvas.drawPath(path, paint);
   }
 

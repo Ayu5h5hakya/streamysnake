@@ -86,6 +86,7 @@ class TBlock extends CustomPainter {
         ..relativeLineTo(width, 0)
         ..close();
     }
+    canvas.translate(0, position);
     canvas.drawPath(path, paint);
   }
 

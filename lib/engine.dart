@@ -47,7 +47,8 @@ class Engine {
       const Point<double>(12, 0),
     ];
     _playerController.add(Tetrimino(
-        current: _availablePieces[Random().nextInt(7)],
-        origin: _possiblePositions[Random().nextInt(4)]));
+      current: _availablePieces[Random().nextInt(7)],
+      origin: _possiblePositions[Random().nextInt(4)] * extent,
+    ));
   }
 }
