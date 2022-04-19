@@ -28,9 +28,9 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class OBlock extends CustomPainter {
-  final double width;
+  final double width, position;
   final Point<double> origin;
-  const OBlock({required this.width, required this.origin});
+  const OBlock({this.position = 0, required this.width, required this.origin});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()

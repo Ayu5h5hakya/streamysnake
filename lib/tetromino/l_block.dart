@@ -28,10 +28,14 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class LBlock extends CustomPainter {
-  final double angle;
+  final double angle, position;
   final double width;
   final Point<double> origin;
-  const LBlock({this.angle = 0, required this.width, required this.origin});
+  const LBlock(
+      {this.angle = 0,
+      this.position = 0,
+      required this.width,
+      required this.origin});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()

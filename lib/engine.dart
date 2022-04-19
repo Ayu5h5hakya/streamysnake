@@ -7,29 +7,47 @@ import 'data/tetrinimo.dart';
 
 class Engine {
   final double width, height, extent;
-  StreamController<Tetrimino> _gameController = StreamController();
-  StreamController<Tetrimino> _playerController = StreamController();
+  final StreamController<Tetrimino> _playerController = StreamController();
+  final StreamController<List<int>> _gridController = StreamController();
 
-  Engine({required this.width, required this.height, required this.extent}) {
-    _gameController = StreamController();
-    _playerController = StreamController();
+  Engine({required this.width, required this.height, required this.extent});
 
-    _gameController.stream.listen((tetramino) {
-      RangeStream(0, height ~/ extent)
-          .interval(const Duration(seconds: 1))
-          .listen((offset) {
-        _playerController.add(
-          Tetrimino(
-              current: tetramino.current,
-              origin: Point(tetramino.origin.x, tetramino.origin.y),
-              position: offset * extent),
-        );
-      });
-    });
-  }
-  Stream<Tetrimino> get playerStream => _playerController.stream;
+  Stream<Tetrimino> get playerStream => _playerController.stream.flatMap(
+        (tetramino) => RangeStream(0, height ~/ extent)
+            .interval(const Duration(seconds: 1))
+            .map(
+              (offset) => Tetrimino(
+                current: tetramino.current,
+                origin: Point(tetramino.origin.x, tetramino.origin.y),
+                position: offset * extent,
+              ),
+            )
+            .doOnDone(() {
+          spawn();
+        }),
+      );
+
+  Stream<List<int>> get gridStateStream => _gridController.stream;
 
   void spawn() {
-    _gameController.add(Tetrimino(current: Piece.J, origin: const Point(0, 0)));
+    final _availablePieces = [
+      Piece.I,
+      Piece.J,
+      Piece.T,
+      Piece.S,
+      Piece.Z,
+      Piece.O,
+      Piece.L,
+    ];
+
+    final _possiblePositions = [
+      const Point<double>(0, 0),
+      const Point<double>(4, 0),
+      const Point<double>(8, 0),
+      const Point<double>(12, 0),
+    ];
+    _playerController.add(Tetrimino(
+        current: _availablePieces[Random().nextInt(7)],
+        origin: _possiblePositions[Random().nextInt(4)]));
   }
 }

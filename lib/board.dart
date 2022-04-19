@@ -10,17 +10,23 @@ class TetrisBoard extends StatelessWidget {
     return FractionallySizedBox(
       widthFactor: 0.7,
       heightFactor: 0.75,
-      child: GridView.builder(
-        padding: EdgeInsets.zero,
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: _engine.extent,
-        ),
-        itemBuilder: (_, index) => DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade300),
+      child: StreamBuilder<List<int>>(
+        stream: _engine.gridStateStream,
+        builder: (_, data) => GridView.builder(
+          padding: EdgeInsets.zero,
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: _engine.extent,
           ),
+          itemBuilder: (_, index) => DecoratedBox(
+            decoration: BoxDecoration(
+              color: (data.data?.contains(index) ?? false)
+                  ? Colors.green
+                  : Colors.white,
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+          ),
+          itemCount: 648,
         ),
-        itemCount: 648,
       ),
     );
   }
