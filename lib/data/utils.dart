@@ -1,6 +1,23 @@
-import 'dart:math';
-
 import 'tetrinimo.dart';
+
+int getMaxExtentByPiece(Tetrimino tetrimino) {
+  switch (tetrimino.current) {
+    case Piece.I:
+    case Piece.J:
+    case Piece.L:
+    case Piece.S:
+    case Piece.T:
+    case Piece.Z:
+      return _getBlockExtent(tetrimino.angle);
+    case Piece.O:
+      return 2;
+  }
+}
+
+int _getBlockExtent(double angle) {
+  if (angle == 90 || angle == 270) return 4;
+  return 0;
+}
 
 List<int> mapToGridIndex(Tetrimino piece, double extent) {
   final _horizontalNormal = piece.origin.x ~/ extent;

@@ -4,17 +4,21 @@ import 'dart:math';
 import 'package:rxdart/rxdart.dart';
 
 import 'data/tetrinimo.dart';
+import 'data/utils.dart';
 
 class Engine {
   final double width, height, extent;
+  final List<Tetrimino> _setPieces = [];
   final StreamController<Tetrimino> _playerController = StreamController();
-  final StreamController<List<int>> _gridController = StreamController();
+  final StreamController<List<Tetrimino>> _gridController = StreamController();
 
   Engine({required this.width, required this.height, required this.extent});
 
-  Stream<Tetrimino> get playerStream => _playerController.stream.flatMap(
-        (tetramino) => RangeStream(0, height ~/ extent)
-            .interval(const Duration(seconds: 1))
+  Stream<Tetrimino> get playerStream =>
+      _playerController.stream.flatMap((tetramino) {
+        var _current = tetramino;
+        return RangeStream(0, height ~/ extent - getMaxExtentByPiece(tetramino))
+            .interval(const Duration(milliseconds: 500))
             .map(
               (offset) => Tetrimino(
                 current: tetramino.current,
@@ -22,12 +26,16 @@ class Engine {
                 position: offset * extent,
               ),
             )
-            .doOnDone(() {
+            .doOnData((piece) {
+          _current = piece;
+        }).doOnDone(() {
+          _setPieces.add(_current);
+          _gridController.add(_setPieces);
           spawn();
-        }),
-      );
+        });
+      });
 
-  Stream<List<int>> get gridStateStream => _gridController.stream;
+  Stream<List<Tetrimino>> get gridStateStream => _gridController.stream;
 
   void spawn() {
     final _availablePieces = [
@@ -47,8 +55,8 @@ class Engine {
       const Point<double>(12, 0),
     ];
     _playerController.add(Tetrimino(
-      current: _availablePieces[Random().nextInt(7)],
-      origin: _possiblePositions[Random().nextInt(4)] * extent,
+      current: _availablePieces[Random().nextInt(_availablePieces.length)],
+      origin: _possiblePositions[Random().nextInt(_possiblePositions.length)],
     ));
   }
 }
