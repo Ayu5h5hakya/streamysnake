@@ -14,7 +14,6 @@ class TetrisBoard extends StatelessWidget {
       child: StreamBuilder<List<Tetrimino>>(
         stream: _engine.gridStateStream,
         builder: (_, data) {
-          print(data);
           return GridView.builder(
             padding: EdgeInsets.zero,
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
