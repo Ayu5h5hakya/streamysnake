@@ -62,7 +62,7 @@ class Engine {
       Point<double>(12 * extent, 0),
     ];
     _playerController.add(Tetrimino(
-      current: Piece.I,
+      current: Piece.T,
       origin: _possiblePositions[Random().nextInt(_possiblePositions.length)],
     ));
   }

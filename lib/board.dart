@@ -26,6 +26,10 @@ class TetrisBoard extends StatelessWidget {
                     : Colors.white,
                 border: Border.all(color: Colors.grey.shade300),
               ),
+              child: Text(
+                index.toString(),
+                style: TextStyle(fontSize: 8),
+              ),
             ),
             itemCount: 648,
           );
