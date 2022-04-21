@@ -23,7 +23,7 @@ class Engine {
               (offset) => Tetrimino(
                 current: tetramino.current,
                 origin: Point(tetramino.origin.x, tetramino.origin.y),
-                position: offset * extent,
+                position: offset.toDouble(),
               ),
             )
             .doOnData((piece) {
@@ -35,7 +35,14 @@ class Engine {
         });
       });
 
-  Stream<List<Tetrimino>> get gridStateStream => _gridController.stream;
+  Stream<List<int>> get gridStateStream =>
+      _gridController.stream.map((List<Tetrimino> setPieces) {
+        final _setIndexes = <int>[];
+        for (final piece in setPieces) {
+          _setIndexes.addAll(mapToGridIndex(piece, extent, width ~/ extent));
+        }
+        return _setIndexes;
+      });
 
   void spawn() {
     final _availablePieces = [
@@ -50,12 +57,12 @@ class Engine {
 
     final _possiblePositions = [
       const Point<double>(0, 0),
-      const Point<double>(4, 0),
-      const Point<double>(8, 0),
-      const Point<double>(12, 0),
+      Point<double>(4 * extent, 0),
+      Point<double>(8 * extent, 0),
+      Point<double>(12 * extent, 0),
     ];
     _playerController.add(Tetrimino(
-      current: _availablePieces[Random().nextInt(_availablePieces.length)],
+      current: Piece.I,
       origin: _possiblePositions[Random().nextInt(_possiblePositions.length)],
     ));
   }

@@ -54,7 +54,7 @@ class IBlock extends CustomPainter {
         ..relativeLineTo(-width * 4, 0)
         ..close();
     }
-    canvas.translate(0, position);
+    canvas.translate(0, position * width);
     canvas.drawPath(path, paint);
   }
 

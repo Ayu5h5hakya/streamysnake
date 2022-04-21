@@ -21,8 +21,8 @@ int _getBlockExtent(double angle) {
 
 List<int> mapToGridIndex(Tetrimino piece, double extent, int colCount) {
   final _horizontalNormal = piece.origin.x ~/ extent;
-  final _verticalNormal = piece.origin.y ~/ extent;
-  final _startIndex = colCount * _verticalNormal + _horizontalNormal;
+  final _startIndex =
+      (colCount + 1) * piece.position.toInt() + _horizontalNormal;
   switch (piece.current) {
     case Piece.I:
       return _mapIBlock(_startIndex, colCount, piece.angle);
@@ -85,7 +85,33 @@ List<int> _mapJBlock(int startIndex, int colCount, double angle) {
 }
 
 List<int> _mapLBlock(int startIndex, int colCount, double angle) {
-  return [];
+  if (angle == 90)
+    return [
+      startIndex + 2,
+      startIndex + 3,
+      startIndex + colCount + 1,
+      startIndex + 2 * colCount + 1
+    ];
+  if (angle == 180)
+    return [
+      startIndex + colCount,
+      startIndex + colCount + 1,
+      startIndex + colCount + 2,
+      startIndex + 2 * colCount + 2
+    ];
+  if (angle == 270)
+    return [
+      startIndex + 1,
+      startIndex + colCount + 1,
+      startIndex + 2 * colCount + 1,
+      startIndex + 2 * colCount,
+    ];
+  return [
+    startIndex,
+    startIndex + colCount,
+    startIndex + colCount + 1,
+    startIndex + colCount + 2,
+  ];
 }
 
 List<int> _mapOBlock(int startIndex, int colCount, double angle) {
@@ -98,13 +124,91 @@ List<int> _mapOBlock(int startIndex, int colCount, double angle) {
 }
 
 List<int> _mapSBlock(int startIndex, int colCount, double angle) {
-  return [];
+  if (angle == 90)
+    return [
+      startIndex + 2,
+      startIndex + 3,
+      startIndex + colCount + 1,
+      startIndex + 2 * colCount + 1
+    ];
+  if (angle == 180)
+    return [
+      startIndex + colCount,
+      startIndex + colCount + 1,
+      startIndex + colCount + 2,
+      startIndex + 2 * colCount + 2
+    ];
+  if (angle == 270)
+    return [
+      startIndex + 1,
+      startIndex + colCount + 1,
+      startIndex + 2 * colCount + 1,
+      startIndex + 2 * colCount,
+    ];
+  return [
+    startIndex,
+    startIndex + colCount,
+    startIndex + colCount + 1,
+    startIndex + colCount + 2,
+  ];
 }
 
 List<int> _mapTBlock(int startIndex, int colCount, double angle) {
-  return [];
+  if (angle == 90)
+    return [
+      startIndex + 2,
+      startIndex + 3,
+      startIndex + colCount + 1,
+      startIndex + 2 * colCount + 1
+    ];
+  if (angle == 180)
+    return [
+      startIndex + colCount,
+      startIndex + colCount + 1,
+      startIndex + colCount + 2,
+      startIndex + 2 * colCount + 2
+    ];
+  if (angle == 270)
+    return [
+      startIndex + 1,
+      startIndex + colCount + 1,
+      startIndex + 2 * colCount + 1,
+      startIndex + 2 * colCount,
+    ];
+  return [
+    startIndex,
+    startIndex + colCount,
+    startIndex + colCount + 1,
+    startIndex + colCount + 2,
+  ];
 }
 
 List<int> _mapZBlock(int startIndex, int colCount, double angle) {
-  return [];
+  if (angle == 90)
+    return [
+      startIndex + 2,
+      startIndex + 3,
+      startIndex + colCount + 1,
+      startIndex + 2 * colCount + 1
+    ];
+  if (angle == 180)
+    return [
+      startIndex + colCount,
+      startIndex + colCount + 1,
+      startIndex + colCount + 2,
+      startIndex + 2 * colCount + 2
+    ];
+  if (angle == 270)
+    return [
+      startIndex + 1,
+      startIndex + colCount + 1,
+      startIndex + 2 * colCount + 1,
+      startIndex + 2 * colCount,
+    ];
+  return [
+    startIndex,
+    startIndex + colCount,
+    startIndex + colCount + 1,
+    startIndex + colCount + 2,
+  ];
 }

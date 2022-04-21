@@ -11,7 +11,7 @@ class TetrisBoard extends StatelessWidget {
     return FractionallySizedBox(
       widthFactor: 0.7,
       heightFactor: 0.75,
-      child: StreamBuilder<List<Tetrimino>>(
+      child: StreamBuilder<List<int>>(
         stream: _engine.gridStateStream,
         builder: (_, data) {
           return GridView.builder(
@@ -21,7 +21,9 @@ class TetrisBoard extends StatelessWidget {
             ),
             itemBuilder: (_, index) => DecoratedBox(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: (data.data?.contains(index) ?? false)
+                    ? Colors.green
+                    : Colors.white,
                 border: Border.all(color: Colors.grey.shade300),
               ),
             ),
