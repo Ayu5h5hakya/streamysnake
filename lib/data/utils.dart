@@ -146,10 +146,10 @@ List<int> _mapSBlock(int startIndex, int colCount, double angle) {
       startIndex + 2 * colCount,
     ];
   return [
-    startIndex,
+    startIndex + 1,
+    startIndex + 2,
     startIndex + colCount,
     startIndex + colCount + 1,
-    startIndex + colCount + 2,
   ];
 }
 
@@ -176,7 +176,7 @@ List<int> _mapTBlock(int startIndex, int colCount, double angle) {
       startIndex + 2 * colCount,
     ];
   return [
-    startIndex,
+    startIndex + 1,
     startIndex + colCount,
     startIndex + colCount + 1,
     startIndex + colCount + 2,
@@ -207,7 +207,7 @@ List<int> _mapZBlock(int startIndex, int colCount, double angle) {
     ];
   return [
     startIndex,
-    startIndex + colCount,
+    startIndex + 1,
     startIndex + colCount + 1,
     startIndex + colCount + 2,
   ];

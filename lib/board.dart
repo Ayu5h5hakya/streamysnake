@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'data/tetrinimo.dart';
 import 'main.dart';
 
 class TetrisBoard extends StatelessWidget {
@@ -10,7 +11,7 @@ class TetrisBoard extends StatelessWidget {
     return SizedBox(
       width: _engine.effectiveWidth.toDouble(),
       height: _engine.effectiveHeight.toDouble(),
-      child: StreamBuilder<List<int>>(
+      child: StreamBuilder<List<TetrisUnit>>(
         stream: _engine.gridStateStream,
         builder: (_, data) {
           return GridView.builder(
@@ -18,13 +19,22 @@ class TetrisBoard extends StatelessWidget {
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: _engine.extent.toDouble(),
             ),
-            itemBuilder: (_, index) => DecoratedBox(
-              decoration: BoxDecoration(
-                color: (data.data?.contains(index) ?? false)
-                    ? Colors.teal
-                    : Colors.white,
-              ),
-            ),
+            itemBuilder: (_, index) {
+              var _color = Colors.white;
+              if (data.data != null) {
+                for (final unit in data.data!) {
+                  if (unit.index == index) {
+                    _color = unit.color;
+                    break;
+                  }
+                }
+              }
+              return DecoratedBox(
+                decoration: BoxDecoration(
+                  color: _color,
+                ),
+              );
+            },
             itemCount: _engine.getGridItemCount(),
           );
         },

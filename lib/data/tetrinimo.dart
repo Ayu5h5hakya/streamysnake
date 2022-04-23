@@ -24,16 +24,34 @@
 
 import 'dart:math';
 
+import 'package:flutter/material.dart';
+
 enum Piece { I, L, J, S, T, Z, O }
 
 class Tetrimino {
   final Piece current;
   final Point<double> origin;
   final double angle, position;
+  Color? color;
 
   Tetrimino(
       {required this.current,
       required this.origin,
       this.angle = 0,
-      this.position = 0});
+      this.position = 0}) {
+    if (current == Piece.I) color = Colors.teal;
+    if (current == Piece.J) color = Colors.green;
+    if (current == Piece.L) color = Colors.blue;
+    if (current == Piece.S) color = Colors.pinkAccent;
+    if (current == Piece.T) color = Colors.red;
+    if (current == Piece.Z) color = Colors.blue;
+    if (current == Piece.O) color = Colors.yellow;
+  }
+}
+
+class TetrisUnit {
+  final int index;
+  final Color color;
+
+  TetrisUnit({required this.index, required this.color});
 }
