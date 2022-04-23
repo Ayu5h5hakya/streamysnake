@@ -23,13 +23,11 @@ class Game extends StatelessWidget {
         home: Builder(builder: (ctx) {
           final _width = MediaQuery.of(ctx).size.width * 0.7;
           final _height = MediaQuery.of(ctx).size.height * 0.75;
-          final _maxExtent = sqrt(_width * _height / 640);
           return Scaffold(
             body: TetrisController(
               engine: Engine(
-                width: _width,
-                height: _height,
-                extent: _maxExtent,
+                boardWidth: _width,
+                boardHeight: _height,
               ),
               child: const Tetris(),
             ),
@@ -66,7 +64,7 @@ class Tetris extends StatelessWidget {
     return GestureDetector(
       child: Stack(
         children: [
-          Center(child: TetrisBoard()),
+          const Center(child: TetrisBoard()),
           Player(),
         ],
       ),

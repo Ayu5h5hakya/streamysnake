@@ -19,7 +19,7 @@ int _getBlockExtent(double angle) {
   return 0;
 }
 
-List<int> mapToGridIndex(Tetrimino piece, double extent, int colCount) {
+List<int> mapToGridIndex(Tetrimino piece, int extent, int colCount) {
   final _horizontalNormal = piece.origin.x ~/ extent;
   final _startIndex = colCount * piece.position.toInt() + _horizontalNormal;
   switch (piece.current) {
