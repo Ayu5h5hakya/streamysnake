@@ -16,7 +16,7 @@ int getMaxExtentByPiece(Tetrimino tetrimino) {
 
 int _getBlockExtent(double angle) {
   if (angle == 90 || angle == 270) return 4;
-  return 0;
+  return 2;
 }
 
 List<int> mapToGridIndex(Tetrimino piece, int extent, int colCount) {
@@ -119,7 +119,7 @@ List<int> _mapOBlock(int startIndex, int colCount, double angle) {
     startIndex,
     startIndex + 1,
     startIndex + colCount + 1,
-    startIndex + colCount + 2
+    startIndex + colCount
   ];
 }
 
