@@ -43,7 +43,7 @@ class OBlock extends CustomPainter {
       ..lineTo(origin.x + width * 2, origin.y + width * 2)
       ..lineTo(origin.x, origin.y + width * 2)
       ..close();
-    canvas.translate(0, position);
+    canvas.translate(0, position * width);
     canvas.drawPath(path, paint);
   }
 

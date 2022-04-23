@@ -86,7 +86,7 @@ class ZBlock extends CustomPainter {
         ..relativeLineTo(-width, 0)
         ..close();
     }
-    canvas.translate(0, position);
+    canvas.translate(0, position * width);
     canvas.drawPath(path, paint);
   }
 
