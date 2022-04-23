@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'data/tetrinimo.dart';
@@ -21,20 +22,23 @@ class Player extends StatelessWidget {
   Widget build(BuildContext context) {
     final _engine = TetrisController.of(context);
     return Center(
-      child: SizedBox(
-        width: _engine.width,
-        height: _engine.height,
-        child: StreamBuilder<Tetrimino>(
-          stream: _engine.playerStream,
-          builder: ((context, snapshot) {
-            if (snapshot.hasData) {
-              return CustomPaint(
-                painter: _getNextPiece(snapshot.data!, _engine.extent),
-              );
-            }
-            return const SizedBox.shrink();
-          }),
-        ),
+      child: StreamBuilder<Tetrimino>(
+        stream: _engine.playerStream,
+        builder: ((context, snapshot) {
+          if (snapshot.hasData) {
+            return ClipRect(
+              child: CustomPaint(
+                painter:
+                    _getNextPiece(snapshot.data!, _engine.extent.toDouble()),
+                child: SizedBox(
+                  width: _engine.effectiveWidth.toDouble(),
+                  height: _engine.effectiveHeight.toDouble(),
+                ),
+              ),
+            );
+          }
+          return const SizedBox.shrink();
+        }),
       ),
     );
   }
