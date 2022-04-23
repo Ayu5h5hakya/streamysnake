@@ -8,9 +8,9 @@ int getMaxExtentByPiece(Tetrimino tetrimino) {
     case Piece.S:
     case Piece.T:
     case Piece.Z:
-      return _getBlockExtent(tetrimino.angle);
+      return _getBlockExtent(tetrimino.angle) - 1;
     case Piece.O:
-      return 2;
+      return 1;
   }
 }
 
@@ -21,7 +21,8 @@ int _getBlockExtent(double angle) {
 
 List<int> mapToGridIndex(Tetrimino piece, int extent, int colCount) {
   final _horizontalNormal = piece.origin.x ~/ extent;
-  final _startIndex = colCount * piece.position.toInt() + _horizontalNormal;
+  final _startIndex =
+      colCount * (piece.position - 1).toInt() + _horizontalNormal;
   switch (piece.current) {
     case Piece.I:
       return _mapIBlock(_startIndex, colCount, piece.angle);
@@ -43,10 +44,10 @@ List<int> mapToGridIndex(Tetrimino piece, int extent, int colCount) {
 List<int> _mapIBlock(int startIndex, int colCount, double angle) {
   if (angle == 90 || angle == 270) {
     return [
-      startIndex,
-      startIndex + colCount + 1,
+      startIndex + 2,
       startIndex + colCount + 2,
-      startIndex + colCount + 3
+      startIndex + 2 * colCount + 2,
+      startIndex + 3 * colCount + 2
     ];
   } else {
     return [startIndex, startIndex + 1, startIndex + 2, startIndex + 3];

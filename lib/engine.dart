@@ -27,17 +27,22 @@ class Engine {
   Stream<Tetrimino> get playerStream =>
       _playerController.stream.flatMap((tetramino) {
         var _current = tetramino;
-        return RangeStream(0, effectiveHeight ~/ extent)
+        print(effectiveHeight ~/ extent);
+        print(getMaxExtentByPiece(_current));
+        return RangeStream(0,
+                ((effectiveHeight ~/ extent) - getMaxExtentByPiece(_current)))
             .interval(const Duration(milliseconds: 500))
             .map(
-              (offset) => Tetrimino(
-                angle: 90,
-                current: tetramino.current,
-                origin: Point(tetramino.origin.x, tetramino.origin.y),
-                position: offset.toDouble(),
-              ),
-            )
-            .doOnData((piece) {
+          (offset) {
+            print(offset);
+            return Tetrimino(
+              angle: tetramino.angle,
+              current: tetramino.current,
+              origin: Point(tetramino.origin.x, tetramino.origin.y),
+              position: offset.toDouble(),
+            );
+          },
+        ).doOnData((piece) {
           _current = piece;
         }).doOnDone(() {
           _setPieces.add(_current);
@@ -75,8 +80,8 @@ class Engine {
       Point<double>(16.0 * extent, 0),
     ];
     _playerController.add(Tetrimino(
-      current: Piece.I,
-      origin: _possiblePositions[0],
+      current: _availablePieces[Random().nextInt(_availablePieces.length)],
+      origin: _possiblePositions[Random().nextInt(_possiblePositions.length)],
     ));
   }
 }

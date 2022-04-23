@@ -21,13 +21,8 @@ class TetrisBoard extends StatelessWidget {
             itemBuilder: (_, index) => DecoratedBox(
               decoration: BoxDecoration(
                 color: (data.data?.contains(index) ?? false)
-                    ? Colors.green
+                    ? Colors.teal
                     : Colors.white,
-                border: Border.all(color: Colors.grey.shade300),
-              ),
-              child: Text(
-                index.toString(),
-                style: TextStyle(fontSize: 8),
               ),
             ),
             itemCount: _engine.getGridItemCount(),
