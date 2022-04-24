@@ -10,13 +10,7 @@ class TetrisBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     final _engine = TetrisController.of(context);
     return Container(
-      decoration: BoxDecoration(
-          border: Border(
-        left: BorderSide(),
-        right: BorderSide(),
-        bottom: BorderSide(),
-        top: BorderSide(),
-      )),
+      color: Colors.white,
       width: _engine.effectiveWidth.toDouble(),
       height: _engine.effectiveHeight.toDouble(),
       child: StreamBuilder<List<TetrisUnit>>(
@@ -37,8 +31,8 @@ class TetrisBoard extends StatelessWidget {
                   }
                 }
               }
-              return DecoratedBox(
-                decoration: UnitDecoration(),
+              return ColoredBox(
+                color: _color,
               );
             },
             itemCount: _engine.getGridItemCount(),

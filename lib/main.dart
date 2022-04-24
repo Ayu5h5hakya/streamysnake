@@ -24,6 +24,7 @@ class Game extends StatelessWidget {
           final _width = MediaQuery.of(ctx).size.width * 0.7;
           final _height = MediaQuery.of(ctx).size.height * 0.75;
           return Scaffold(
+            backgroundColor: Colors.black54,
             body: TetrisController(
               engine: Engine(
                 boardWidth: _width,
