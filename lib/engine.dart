@@ -9,7 +9,7 @@ import 'data/utils.dart';
 class Engine {
   static const int COL_COUNT = 20;
   final double boardWidth, boardHeight;
-  int extent = 0, effectiveWidth = 0, effectiveHeight = 0;
+  int extent = 0, effectiveWidth = 0, effectiveHeight = 0, _itemCount = 0;
   final List<TetrisUnit> _setPieces = [];
 
   final StreamController<Tetrimino> _playerController = StreamController();
@@ -22,14 +22,15 @@ class Engine {
   }
 
   int getGridItemCount() {
-    return COL_COUNT * (effectiveHeight ~/ extent);
+    _itemCount = COL_COUNT * (effectiveHeight ~/ extent);
+    return _itemCount;
   }
 
   Stream<Tetrimino> get playerStream =>
       _playerController.stream.flatMap((tetramino) {
         var _current = tetramino;
-        return RangeStream(0, ((effectiveHeight ~/ extent) - 0))
-            .interval(const Duration(milliseconds: 100))
+        return RangeStream(0, ((effectiveHeight ~/ extent)))
+            .interval(const Duration(milliseconds: 500))
             .map(
           (offset) {
             print(offset);
@@ -42,7 +43,12 @@ class Engine {
           },
         ).takeWhile((_piece) {
           final _nextIndexes = mapToGridIndex(_piece, extent, COL_COUNT);
-          return !_setPieces.any((item) => _nextIndexes.contains(item.index));
+
+          final _isPieceInsideTheBoard =
+              !_nextIndexes.any((index) => index > _itemCount);
+          final _isNextPositionCollisionFree =
+              !_setPieces.any((item) => _nextIndexes.contains(item.index));
+          return _isPieceInsideTheBoard && _isNextPositionCollisionFree;
         }).doOnData((piece) {
           _current = piece;
         }).doOnDone(() {
@@ -68,11 +74,9 @@ class Engine {
     ];
 
     _playerController.add(Tetrimino(
-      current: _availablePieces[5],
-      origin: Point<double>(0, 0),
-      // origin:
-      //     Point<double>(Random().nextInt(COL_COUNT - 4).toDouble() * extent,
-      // 0),
+      current: _availablePieces[Random().nextInt(_availablePieces.length)],
+      origin:
+          Point<double>(Random().nextInt(COL_COUNT - 4).toDouble() * extent, 0),
     ));
   }
 }
