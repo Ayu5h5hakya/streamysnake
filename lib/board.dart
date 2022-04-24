@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'data/tetrinimo.dart';
 import 'main.dart';
+import 'unit_decoration.dart';
 
 class TetrisBoard extends StatelessWidget {
   const TetrisBoard({Key? key}) : super(key: key);
@@ -8,7 +9,14 @@ class TetrisBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _engine = TetrisController.of(context);
-    return SizedBox(
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+        left: BorderSide(),
+        right: BorderSide(),
+        bottom: BorderSide(),
+        top: BorderSide(),
+      )),
       width: _engine.effectiveWidth.toDouble(),
       height: _engine.effectiveHeight.toDouble(),
       child: StreamBuilder<List<TetrisUnit>>(
@@ -30,9 +38,7 @@ class TetrisBoard extends StatelessWidget {
                 }
               }
               return DecoratedBox(
-                decoration: BoxDecoration(
-                  color: _color,
-                ),
+                decoration: UnitDecoration(),
               );
             },
             itemCount: _engine.getGridItemCount(),
