@@ -34,7 +34,7 @@ class OBlock extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.blue
+      ..color = Colors.yellow
       ..style = PaintingStyle.fill;
 
     final path = Path()
