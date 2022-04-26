@@ -26,12 +26,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class ZBlock extends CustomPainter {
-  final double angle, position;
+  final double angle, xOffset, yOffset;
   final double width;
   final Point<double> origin;
   const ZBlock(
       {this.angle = 0,
-      this.position = 0,
+      this.xOffset = 0,
+      this.yOffset = 0,
       required this.width,
       required this.origin});
   @override
@@ -86,7 +87,7 @@ class ZBlock extends CustomPainter {
         ..relativeLineTo(-width, 0)
         ..close();
     }
-    canvas.translate(0, position * width);
+    canvas.translate(xOffset * width, yOffset * width);
     canvas.drawPath(path, paint);
   }
 

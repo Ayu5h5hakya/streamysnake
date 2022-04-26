@@ -28,9 +28,14 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class OBlock extends CustomPainter {
-  final double width, position;
+  final double width, xOffset, yOffset;
   final Point<double> origin;
-  const OBlock({this.position = 0, required this.width, required this.origin});
+  const OBlock({
+    this.xOffset = 0,
+    this.yOffset = 0,
+    required this.width,
+    required this.origin,
+  });
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
@@ -43,7 +48,7 @@ class OBlock extends CustomPainter {
       ..lineTo(origin.x + width * 2, origin.y + width * 2)
       ..lineTo(origin.x, origin.y + width * 2)
       ..close();
-    canvas.translate(0, position * width);
+    canvas.translate(xOffset * width, yOffset * width);
     canvas.drawPath(path, paint);
   }
 

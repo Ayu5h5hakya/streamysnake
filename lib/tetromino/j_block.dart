@@ -26,12 +26,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class JBlock extends CustomPainter {
-  final double angle, position;
+  final double angle, xOffset, yOffset;
   final double width;
   final Point<double> origin;
   const JBlock(
       {this.angle = 0,
-      this.position = 0,
+      this.yOffset = 0,
+      this.xOffset = 0,
       required this.width,
       required this.origin});
   @override
@@ -78,7 +79,7 @@ class JBlock extends CustomPainter {
         ..relativeLineTo(-3 * width, 0)
         ..close();
     }
-    canvas.translate(0, position * width);
+    canvas.translate(xOffset * width, yOffset * width);
     canvas.drawPath(path, paint);
   }
 

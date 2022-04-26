@@ -49,6 +49,7 @@ class Player extends StatelessWidget {
         width: extent,
         angle: nextPiece.angle,
         yOffset: nextPiece.yOffset,
+        xOffset: nextPiece.xOffset,
         origin: nextPiece.origin,
       );
     if (nextPiece.current == Piece.J)
@@ -56,6 +57,7 @@ class Player extends StatelessWidget {
         width: extent,
         angle: nextPiece.angle,
         yOffset: nextPiece.yOffset,
+        xOffset: nextPiece.xOffset,
         origin: nextPiece.origin,
       );
     if (nextPiece.current == Piece.T)
@@ -63,6 +65,7 @@ class Player extends StatelessWidget {
         width: extent,
         angle: nextPiece.angle,
         yOffset: nextPiece.yOffset,
+        xOffset: nextPiece.xOffset,
         origin: nextPiece.origin,
       );
     if (nextPiece.current == Piece.S)
@@ -70,6 +73,7 @@ class Player extends StatelessWidget {
         width: extent,
         angle: nextPiece.angle,
         yOffset: nextPiece.yOffset,
+        xOffset: nextPiece.xOffset,
         origin: nextPiece.origin,
       );
     if (nextPiece.current == Piece.Z)
@@ -77,12 +81,14 @@ class Player extends StatelessWidget {
         width: extent,
         angle: nextPiece.angle,
         yOffset: nextPiece.yOffset,
+        xOffset: nextPiece.xOffset,
         origin: nextPiece.origin,
       );
     if (nextPiece.current == Piece.O)
       return OBlock(
         width: extent,
         yOffset: nextPiece.yOffset,
+        xOffset: nextPiece.xOffset,
         origin: nextPiece.origin,
       );
     if (nextPiece.current == Piece.L)
@@ -90,6 +96,7 @@ class Player extends StatelessWidget {
         width: extent,
         angle: nextPiece.angle,
         yOffset: nextPiece.yOffset,
+        xOffset: nextPiece.xOffset,
         origin: nextPiece.origin,
       );
     return null;
