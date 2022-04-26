@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:rxdart/rxdart.dart';
 
+import 'data/game.dart';
 import 'data/tetrinimo.dart';
 import 'data/utils.dart';
 
@@ -13,12 +14,13 @@ class Engine {
   final List<TetrisUnit> _setPieces = [];
 
   final StreamController<Tetrimino> _playerController = StreamController();
-  final StreamController<List<TetrisUnit>> _gridController = StreamController();
+  final StreamController<GameData> _gameController = BehaviorSubject();
 
   Engine({required this.boardWidth, required this.boardHeight}) {
     effectiveWidth = (boardWidth / COL_COUNT).floor() * COL_COUNT;
     extent = effectiveWidth ~/ COL_COUNT;
     effectiveHeight = (boardHeight / extent).floor() * extent;
+    _gameController.add(GameData(state: GameState.Start, pieces: []));
   }
 
   int getGridItemCount() {
@@ -30,7 +32,7 @@ class Engine {
       _playerController.stream.flatMap((tetramino) {
         var _current = tetramino;
         return RangeStream(0, ((effectiveHeight ~/ extent)))
-            .interval(const Duration(milliseconds: 500))
+            .interval(const Duration(milliseconds: 100))
             .map(
           (offset) {
             print(offset);
@@ -55,14 +57,15 @@ class Engine {
           _setPieces.addAll(mapToGridIndex(
                   _current, extent, boardWidth ~/ extent)
               .map((item) => TetrisUnit(index: item, color: _current.color!)));
-          _gridController.add(_setPieces);
-          spawn();
+          _gameController
+              .add(GameData(state: GameState.Play, pieces: _setPieces));
+          _spawn();
         });
       });
 
-  Stream<List<TetrisUnit>> get gridStateStream => _gridController.stream;
+  Stream<GameData> get gridStateStream => _gameController.stream;
 
-  void spawn() {
+  void _spawn() {
     final _availablePieces = [
       Piece.I,
       Piece.J,
@@ -78,5 +81,18 @@ class Engine {
       origin:
           Point<double>(Random().nextInt(COL_COUNT - 4).toDouble() * extent, 0),
     ));
+  }
+
+  void spawn() {
+    _gameController.add(GameData(state: GameState.Play, pieces: []));
+    _spawn();
+  }
+
+  void movePiece(int direction) {
+    print(direction == 0 ? 'left' : 'right');
+  }
+
+  void rotatePiece() {
+    print('rotate');
   }
 }

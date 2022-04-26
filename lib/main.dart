@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'board.dart';
+import 'data/game.dart';
 import 'engine.dart';
 import 'player.dart';
 
@@ -62,16 +63,73 @@ class Tetris extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _engine = TetrisController.of(context);
-    return GestureDetector(
-      child: Stack(
-        children: [
-          const Center(child: TetrisBoard()),
-          Player(),
-        ],
-      ),
-      onTap: () {
-        _engine.spawn();
-      },
+    return Stack(
+      children: [
+        const Center(child: TetrisBoard()),
+        Player(),
+        _UserInteractionLayer(
+          onClick: (side) {
+            _engine.movePiece(side);
+          },
+          onDoubleClick: () {
+            _engine.rotatePiece();
+          },
+        )
+      ],
     );
+  }
+}
+
+class _UserInteractionLayer extends StatelessWidget {
+  final Function(int)? onClick;
+  final VoidCallback? onDoubleClick;
+  const _UserInteractionLayer({Key? key, this.onClick, this.onDoubleClick})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final _engine = TetrisController.of(context);
+    return StreamBuilder<GameData>(
+        stream: _engine.gridStateStream,
+        builder: (_, data) {
+          if (data.data == null) return const SizedBox.shrink();
+          return IgnorePointer(
+            ignoring: data.data!.state == GameState.Start,
+            child: Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    child: Container(
+                      color: Colors.transparent,
+                    ),
+                    onTap: () {
+                      if (onClick != null) onClick!(0);
+                    },
+                    onDoubleTap: () {
+                      if (onDoubleClick != null) onDoubleClick!();
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    child: Container(
+                      color: Colors.transparent,
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: FloatingActionButton(onPressed: () {}),
+                      ),
+                    ),
+                    onTap: () {
+                      if (onClick != null) onClick!(1);
+                    },
+                    onDoubleTap: () {
+                      if (onDoubleClick != null) onDoubleClick!();
+                    },
+                  ),
+                )
+              ],
+            ),
+          );
+        });
   }
 }
