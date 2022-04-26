@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:rxdart/rxdart.dart';
 
 import 'data/game.dart';
+import 'data/input.dart';
 import 'data/tetrinimo.dart';
 import 'data/utils.dart';
 
@@ -14,6 +15,7 @@ class Engine {
   final List<TetrisUnit> _setPieces = [];
 
   final StreamController<Tetrimino> _playerController = StreamController();
+  final StreamController<UserInput> _inputController = StreamController();
   final StreamController<GameData> _gameController = BehaviorSubject();
 
   Engine({required this.boardWidth, required this.boardHeight}) {
@@ -31,17 +33,23 @@ class Engine {
   Stream<Tetrimino> get playerStream =>
       _playerController.stream.flatMap((tetramino) {
         var _current = tetramino;
-        return RangeStream(0, ((effectiveHeight ~/ extent)))
-            .interval(const Duration(milliseconds: 100))
-            .map(
-          (offset) {
-            print(offset);
+        return CombineLatestStream.combine2<int, UserInput, MergedInput>(
+            RangeStream(0, ((effectiveHeight ~/ extent)))
+                .interval(const Duration(milliseconds: 100)),
+            _inputController.stream, (yOffset, userInput) {
+          return MergedInput(
+              angle: userInput.angle,
+              xOffset: userInput.xOffset,
+              yOffset: yOffset);
+        }).map(
+          (mergedInput) {
+            print(mergedInput);
             return Tetrimino(
-              angle: tetramino.angle,
-              current: tetramino.current,
-              origin: Point(tetramino.origin.x, tetramino.origin.y),
-              position: offset.toDouble(),
-            );
+                angle: mergedInput.angle.toDouble(),
+                current: tetramino.current,
+                origin: Point(tetramino.origin.x, tetramino.origin.y),
+                yOffset: mergedInput.yOffset.toDouble(),
+                xOffset: mergedInput.xOffset.toDouble());
           },
         ).takeWhile((_piece) {
           final _nextIndexes = mapToGridIndex(_piece, extent, COL_COUNT);

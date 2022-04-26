@@ -48,48 +48,48 @@ class Player extends StatelessWidget {
       return IBlock(
         width: extent,
         angle: nextPiece.angle,
-        position: nextPiece.position,
+        yOffset: nextPiece.yOffset,
         origin: nextPiece.origin,
       );
     if (nextPiece.current == Piece.J)
       return JBlock(
         width: extent,
         angle: nextPiece.angle,
-        position: nextPiece.position,
+        yOffset: nextPiece.yOffset,
         origin: nextPiece.origin,
       );
     if (nextPiece.current == Piece.T)
       return TBlock(
         width: extent,
         angle: nextPiece.angle,
-        position: nextPiece.position,
+        yOffset: nextPiece.yOffset,
         origin: nextPiece.origin,
       );
     if (nextPiece.current == Piece.S)
       return SBlock(
         width: extent,
         angle: nextPiece.angle,
-        position: nextPiece.position,
+        yOffset: nextPiece.yOffset,
         origin: nextPiece.origin,
       );
     if (nextPiece.current == Piece.Z)
       return ZBlock(
         width: extent,
         angle: nextPiece.angle,
-        position: nextPiece.position,
+        yOffset: nextPiece.yOffset,
         origin: nextPiece.origin,
       );
     if (nextPiece.current == Piece.O)
       return OBlock(
         width: extent,
-        position: nextPiece.position,
+        yOffset: nextPiece.yOffset,
         origin: nextPiece.origin,
       );
     if (nextPiece.current == Piece.L)
       return LBlock(
         width: extent,
         angle: nextPiece.angle,
-        position: nextPiece.position,
+        yOffset: nextPiece.yOffset,
         origin: nextPiece.origin,
       );
     return null;

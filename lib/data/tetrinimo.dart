@@ -31,14 +31,15 @@ enum Piece { I, L, J, S, T, Z, O }
 class Tetrimino {
   final Piece current;
   final Point<double> origin;
-  final double angle, position;
+  final double angle, xOffset, yOffset;
   Color? color;
 
   Tetrimino(
       {required this.current,
       required this.origin,
       this.angle = 0,
-      this.position = 0}) {
+      this.xOffset = 0,
+      this.yOffset = 0}) {
     if (current == Piece.I) color = Colors.teal;
     if (current == Piece.J) color = Colors.green;
     if (current == Piece.L) color = Colors.blue;

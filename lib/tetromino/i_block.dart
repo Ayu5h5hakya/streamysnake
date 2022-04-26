@@ -26,11 +26,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class IBlock extends CustomPainter {
-  final double width, position, angle;
+  final double width, yOffset, xOffset, angle;
   final Point<double> origin;
   const IBlock(
       {this.angle = 0,
-      this.position = 0,
+      this.yOffset = 0,
+      this.xOffset = 0,
       required this.width,
       required this.origin});
   @override
@@ -54,7 +55,7 @@ class IBlock extends CustomPainter {
         ..relativeLineTo(-width * 4, 0)
         ..close();
     }
-    canvas.translate(0, position * width);
+    canvas.translate(xOffset * width, yOffset * width);
     canvas.drawPath(path, paint);
   }
 
