@@ -87,7 +87,7 @@ class Engine {
 
     _inputController.add(UserInput(angle: 0, xOffset: 0, yOffset: 0));
     _playerController.add(Tetrimino(
-      current: _availablePieces[3],
+      current: _availablePieces[4],
       origin:
           Point<double>(Random().nextInt(COL_COUNT - 4).toDouble() * extent, 0),
     ));
