@@ -48,6 +48,12 @@ class Tetrimino {
     if (current == Piece.Z) color = Colors.blue;
     if (current == Piece.O) color = Colors.yellow;
   }
+
+  @override
+  String toString() {
+    // ignore: lines_longer_than_80_chars
+    return 'Tetrimino(piece : $current, angle: $angle, xOffset: $xOffset, yOffset: $yOffset)';
+  }
 }
 
 class TetrisUnit {

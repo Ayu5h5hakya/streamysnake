@@ -36,6 +36,7 @@ class TetrisBoard extends StatelessWidget {
                     if (data.data != null) {
                       for (final unit in data.data!.pieces) {
                         if (unit.index == index) {
+                          print('found');
                           _color = unit.color;
                           break;
                         }
@@ -43,6 +44,10 @@ class TetrisBoard extends StatelessWidget {
                     }
                     return ColoredBox(
                       color: _color,
+                      child: Text(
+                        index.toString(),
+                        style: TextStyle(fontSize: 8.0),
+                      ),
                     );
                   },
                   itemCount: _engine.getGridItemCount(),
