@@ -125,24 +125,24 @@ List<int> _mapOBlock(int startIndex, int colCount, double angle) {
 List<int> _mapSBlock(int startIndex, int colCount, double angle) {
   if (angle == 90)
     return [
-      startIndex + 2,
-      startIndex + 3,
-      startIndex + colCount + 1,
-      startIndex + 2 * colCount + 1
-    ];
-  if (angle == 180)
-    return [
-      startIndex + colCount,
+      startIndex + 1,
       startIndex + colCount + 1,
       startIndex + colCount + 2,
       startIndex + 2 * colCount + 2
     ];
+  if (angle == 180)
+    return [
+      startIndex + colCount + 1,
+      startIndex + colCount + 2,
+      startIndex + 2 * colCount + 1,
+      startIndex + 2 * colCount
+    ];
   if (angle == 270)
     return [
-      startIndex + 1,
+      startIndex,
+      startIndex + colCount,
       startIndex + colCount + 1,
-      startIndex + 2 * colCount + 1,
-      startIndex + 2 * colCount,
+      startIndex + 2 * colCount + 2,
     ];
   return [
     startIndex + 1,
