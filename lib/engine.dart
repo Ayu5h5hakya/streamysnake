@@ -72,81 +72,6 @@ class Engine {
         },
       );
 
-  // Stream<Tetrimino> get playerStream {
-  //   var _shouldRememberPiece = false;
-  //   return CombineLatestStream.combine3<Tetrimino, UserInput, int, Tetrimino
-  // >(
-  //     _playerController.stream,
-  //     _inputController.stream
-  //         .startWith(UserInput(angle: 0, xOffset: 0, yOffset: 0)),
-  //     _playerController.stream.flatMap(
-  //       (tetrimino) {
-  //         return RangeStream(0, effectiveHeight ~/ extent)
-  //             .interval(const Duration(milliseconds: 500));
-  //       },
-  //     ),
-  //     (tetrimino, userinput, yOffset) => Tetrimino(
-  //       current: tetrimino.current,
-  //       origin: const Point(0, 0),
-  //       xOffset: userinput.xOffset.toDouble(),
-  //       yOffset: yOffset.toDouble(),
-  //     ),
-  //   ).takeWhile((_piece) {
-  //     final _nextIndexes = mapToGridIndex(_piece, extent, COL_COUNT);
-  //     final _isPieceInsideTheBoard =
-  //         !_nextIndexes.any((index) => index > _itemCount);
-  //     final _isNextPositionCollisionFree =
-  //         !_setPieces.any((item) => _nextIndexes.contains(item.index));
-  //     return _isPieceInsideTheBoard && _isNextPositionCollisionFree;
-  //   }).doOnData((tetrimino) {
-  //     if (_shouldRememberPiece) {
-  //       _setPieces.addAll(
-  //           mapToGridIndex(tetrimino, extent, boardWidth ~/ extent).map(
-  //               (item) => TetrisUnit(
-  //                   index: item, color: tetrimino.color ?? Colors.white)));
-  //       _gameController
-  //           .add(GameData(state: GameState.Play, pieces: _setPieces));
-  //       _shouldRememberPiece = false;
-  //     }
-  //   });
-  // }
-
-  // Stream<Tetrimino> get playerStream =>
-  //     _playerController.stream.flatMap((tetramino) {
-  //       var _current = tetramino;
-  //       return CombineLatestStream.combine2<int, UserInput, Tetrimino>(
-  //           RangeStream(0, ((effectiveHeight ~/ extent)))
-  //               .interval(const Duration(milliseconds: 500)),
-  //           _inputController.stream
-  //               .startWith(UserInput(angle: 0, xOffset: 0, yOffset: 0)),
-  //           (yOffset, userInput) {
-  //         return Tetrimino(
-  //             angle: userInput.angle.toDouble(),
-  //             current: _current.current,
-  //             origin: Point(_current.origin.x, _current.origin.y),
-  //             yOffset: userInput.yOffset.toDouble(),
-  //             xOffset: userInput.xOffset.toDouble());
-  //       }).takeWhile((_piece) {
-  //         final _nextIndexes = mapToGridIndex(_piece, extent, COL_COUNT);
-
-  //         final _isPieceInsideTheBoard =
-  //             !_nextIndexes.any((index) => index > _itemCount);
-  //         final _isNextPositionCollisionFree =
-  //             !_setPieces.any((item) => _nextIndexes.contains(item.index));
-  //         return _isPieceInsideTheBoard && _isNextPositionCollisionFree;
-  //       }).doOnData((piece) {
-  //         _current = piece;
-  //       }).doOnDone(() {
-  //         _setPieces.addAll(mapToGridIndex(
-  //                 _current, extent, boardWidth ~/ extent)
-  //             .map((item) => TetrisUnit(index: item, color: _current.colo
-  // r!)));
-  //         _gameController
-  //             .add(GameData(state: GameState.Play, pieces: _setPieces));
-  //         _spawn();
-  //       });
-  //     });
-
   Stream<GameData> get gridStateStream => _gameController.stream;
 
   void _spawn() {
@@ -160,8 +85,9 @@ class Engine {
       Piece.L,
     ];
 
+    _inputController.add(UserInput(angle: 0, xOffset: 0, yOffset: 0));
     _playerController.add(Tetrimino(
-      current: _availablePieces[Random().nextInt(_availablePieces.length)],
+      current: _availablePieces[1],
       origin:
           Point<double>(Random().nextInt(COL_COUNT - 4).toDouble() * extent, 0),
     ));
