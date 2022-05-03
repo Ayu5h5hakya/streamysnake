@@ -25,8 +25,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
-
 class OBlock extends CustomPainter {
   final double width, xOffset, yOffset;
   final Point<double> origin;

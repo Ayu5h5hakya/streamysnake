@@ -1,3 +1,27 @@
+// Copyright (c) 2022 Razeware LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the 'Software'), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
+// distribute, sublicense, create a derivative work, and/or sell copies of the
+// Software in any work that is designed, intended, or marketed for pedagogical
+// or instructional purposes related to programming, coding, application
+// development, or information technology.  Permission for such use, copying,
+// modification, merger, publication, distribution, sublicensing, creation
+// of derivative works, or sale is expressly withheld.
+// THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 import 'dart:async';
 import 'dart:math';
 
@@ -12,8 +36,11 @@ import 'data/utils.dart';
 class Engine {
   static const int COL_COUNT = 20;
   final double boardWidth, boardHeight;
-  int extent = 0, effectiveWidth = 0, effectiveHeight = 0, _itemCount = 0;
-  final List<TetrisUnit> _setPieces = [];
+  int extent = 0, effectiveWidth = 0, effectiveHeight = 0;
+  final List<Color> _setPieces = [];
+
+  int _itemCount = 0;
+  int getGridItemCount() => _itemCount;
 
   final StreamController<Tetrimino> _playerController = BehaviorSubject();
   final StreamController<UserInput> _inputController = BehaviorSubject();
@@ -24,11 +51,8 @@ class Engine {
     extent = effectiveWidth ~/ COL_COUNT;
     effectiveHeight = (boardHeight / extent).floor() * extent;
     _gameController.add(GameData(state: GameState.Start, pieces: []));
-  }
-
-  int getGridItemCount() {
     _itemCount = COL_COUNT * (effectiveHeight ~/ extent);
-    return _itemCount;
+    _setPieces.addAll(List.filled(_itemCount, Colors.white));
   }
 
   Stream<Tetrimino> get playerStream => _playerController.stream.switchMap(
@@ -57,22 +81,45 @@ class Engine {
             final _isPieceInsideTheBoard =
                 !_nextIndexes.any((index) => index > _itemCount);
             final _isNextPositionCollisionFree =
-                !_setPieces.any((item) => _nextIndexes.contains(item.index));
+                !_nextIndexes.any((item) => _setPieces[item] != Colors.white);
             return _isPieceInsideTheBoard && _isNextPositionCollisionFree;
           }).doOnData((_validTransformedPiece) {
             _current = _validTransformedPiece;
           }).doOnDone(() {
-            _setPieces.addAll(
-                mapToGridIndex(_current, extent, boardWidth ~/ extent).map(
-                    (item) => TetrisUnit(index: item, color: _current.color!)));
-            _gameController
-                .add(GameData(state: GameState.Play, pieces: _setPieces));
-            _spawn();
+            final _indexes = mapToGridIndex(_current, extent, COL_COUNT);
+            _setPieces[_indexes[0]] = _current.color!;
+            _setPieces[_indexes[1]] = _current.color!;
+            _setPieces[_indexes[2]] = _current.color!;
+            _setPieces[_indexes[3]] = _current.color!;
+
+            if (isSetPieceAtTheTop(_setPieces, COL_COUNT)) {
+              _gameController.add(GameData(state: GameState.End, pieces: []));
+              _playerController.add(
+                  Tetrimino(current: Piece.Empty, origin: const Point(0, 0)));
+            } else {
+              _gameController
+                  .add(GameData(state: GameState.Play, pieces: _setPieces));
+              _spawn();
+            }
           });
         },
       );
 
-  Stream<GameData> get gridStateStream => _gameController.stream;
+  Stream<GameData> get gridStateStream {
+    return _gameController.stream.flatMap((data) {
+      if (data.state == GameState.End)
+        return TimerStream(data, const Duration(seconds: 2));
+
+      final _filledGridPieces = getFilledRowIndexes(_setPieces, COL_COUNT);
+      if (_filledGridPieces.isEmpty) return _gameController.stream;
+      return Stream.fromIterable(_filledGridPieces).map((index) {
+        _setPieces.removeRange(index, index + COL_COUNT);
+        _setPieces.insertAll(
+            0, List.generate(COL_COUNT, (index) => Colors.white));
+        return GameData(state: data.state, pieces: _setPieces);
+      });
+    });
+  }
 
   void _spawn() {
     final _availablePieces = [
@@ -87,7 +134,8 @@ class Engine {
 
     _inputController.add(UserInput(angle: 0, xOffset: 0, yOffset: 0));
     _playerController.add(Tetrimino(
-      current: _availablePieces[4],
+      current: _availablePieces[Random().nextInt(_availablePieces.length)],
+      angle: 90,
       origin:
           Point<double>(Random().nextInt(COL_COUNT - 4).toDouble() * extent, 0),
     ));
@@ -105,5 +153,11 @@ class Engine {
 
   void rotatePiece() {
     _inputController.add(UserInput(angle: 90, xOffset: 0, yOffset: 0));
+  }
+
+  void resetGame() {
+    _setPieces.clear();
+    _setPieces.addAll(List.filled(_itemCount, Colors.white));
+    spawn();
   }
 }

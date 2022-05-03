@@ -22,19 +22,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class UserInput {
-  final int angle;
-  final int xOffset;
-  final int yOffset;
+import 'package:flutter/widgets.dart';
 
-  UserInput({
-    required this.angle,
-    required this.xOffset,
-    required this.yOffset,
-  });
+import 'board.dart';
+import 'engine.dart';
+import 'player.dart';
+import 'user_interaction_layer.dart';
+
+class TetrisController extends InheritedWidget {
+  final Engine engine;
+  const TetrisController({
+    Key? key,
+    required this.engine,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  static Engine of(BuildContext context) {
+    final result =
+        context.dependOnInheritedWidgetOfExactType<TetrisController>();
+    assert(result != null, 'No Engine found in context');
+    return result!.engine;
+  }
 
   @override
-  String toString() {
-    return 'UserInput(angle: $angle, xOffset: $xOffset, yOffset:  $yOffset)';
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
+}
+
+class Tetris extends StatelessWidget {
+  const Tetris({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final _engine = TetrisController.of(context);
+    return Stack(
+      children: [
+        const Center(child: TetrisBoard()),
+        const Player(),
+        UserInteractionLayer(
+          onClick: (side) {
+            _engine.movePiece(side);
+          },
+          onDoubleClick: () {
+            _engine.rotatePiece();
+          },
+        )
+      ],
+    );
   }
 }

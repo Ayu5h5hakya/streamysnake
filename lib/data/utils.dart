@@ -1,3 +1,29 @@
+// Copyright (c) 2022 Razeware LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the 'Software'), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
+// distribute, sublicense, create a derivative work, and/or sell copies of the
+// Software in any work that is designed, intended, or marketed for pedagogical
+// or instructional purposes related to programming, coding, application
+// development, or information technology.  Permission for such use, copying,
+// modification, merger, publication, distribution, sublicensing, creation
+// of derivative works, or sale is expressly withheld.
+// THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+import 'package:flutter/material.dart';
+
 import 'tetrinimo.dart';
 
 int getMaxExtentByPiece(Tetrimino tetrimino) {
@@ -11,12 +37,21 @@ int getMaxExtentByPiece(Tetrimino tetrimino) {
       return _getBlockExtent(tetrimino.angle) - 1;
     case Piece.O:
       return 1;
+    default:
+      return 0;
   }
 }
 
 int _getBlockExtent(double angle) {
   if (angle == 90 || angle == 270) return 4;
   return 2;
+}
+
+bool isSetPieceAtTheTop(List<Color> setPieces, int colCount) {
+  for (var i = 0; i < colCount; i++) {
+    if (setPieces[i] != Colors.white) return true;
+  }
+  return false;
 }
 
 List<int> mapToGridIndex(Tetrimino piece, int extent, int colCount) {
@@ -37,7 +72,23 @@ List<int> mapToGridIndex(Tetrimino piece, int extent, int colCount) {
       return _mapTBlock(_startIndex, colCount, piece.angle);
     case Piece.Z:
       return _mapZBlock(_startIndex, colCount, piece.angle);
+    default:
+      return [];
   }
+}
+
+List<int> getFilledRowIndexes(List<Color> setPieces, int colCount) {
+  final _rowIndexes = <int>[];
+  for (var i = 0; i < setPieces.length; i++) {
+    if (setPieces[i] != Colors.white && i % colCount == 0) {
+      var _rowSet = true;
+      for (var incr = 1; incr < colCount; incr++) {
+        if (setPieces[i + incr] == Colors.white) _rowSet = false;
+      }
+      if (_rowSet) _rowIndexes.add(i);
+    }
+  }
+  return _rowIndexes;
 }
 
 List<int> _mapIBlock(int startIndex, int colCount, double angle) {

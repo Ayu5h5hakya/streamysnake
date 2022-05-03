@@ -25,8 +25,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
-
 class LBlock extends CustomPainter {
   final double angle, xOffset, yOffset;
   final double width;
