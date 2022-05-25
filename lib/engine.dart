@@ -44,13 +44,13 @@ class Engine {
 
   final StreamController<Tetrimino> _playerController = BehaviorSubject();
   final StreamController<UserInput> _inputController = BehaviorSubject();
-  final StreamController<GameData> _gameController = BehaviorSubject();
+  final StreamController<GameData> _gameController =
+      BehaviorSubject.seeded(GameData(state: GameState.Start, pieces: []));
 
   Engine({required this.boardWidth, required this.boardHeight}) {
     effectiveWidth = (boardWidth / COL_COUNT).floor() * COL_COUNT;
     extent = effectiveWidth ~/ COL_COUNT;
     effectiveHeight = (boardHeight / extent).floor() * extent;
-    _gameController.add(GameData(state: GameState.Start, pieces: []));
     _itemCount = COL_COUNT * (effectiveHeight ~/ extent);
     _setPieces.addAll(List.filled(_itemCount, Colors.white));
   }

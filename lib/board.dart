@@ -42,60 +42,71 @@ class _BoardState extends State<TetrisBoard> {
   @override
   Widget build(BuildContext context) {
     final _engine = TetrisController.of(context);
-    return Container(
-      color: Colors.white,
-      width: _engine.effectiveWidth.toDouble(),
-      height: _engine.effectiveHeight.toDouble(),
-      child: StreamBuilder<GameData>(
-        stream: _engine.gridStateStream,
-        builder: (_, data) {
-          if (data.hasData) {
-            switch (data.data!.state) {
-              case GameState.Start:
-                return Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        'TETRIS',
-                        style: TextStyle(fontSize: 24.0),
+    return StreamBuilder<GameData>(
+      builder: (_, data) {
+        if (data.hasData) {
+          switch (data.data!.state) {
+            case GameState.Start:
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'TETRIS',
+                      style: TextStyle(fontSize: 24.0),
+                    ),
+                    FloatingActionButton(
+                        child: const Icon(Icons.play_arrow),
+                        onPressed: () {
+                          _engine.spawn();
+                        }),
+                    const Text(
+                      '-START-',
+                      style: TextStyle(fontSize: 20.0),
+                    )
+                  ],
+                ),
+              );
+            case GameState.Play:
+              return Row(
+                children: [
+                  FloatingActionButton.small(onPressed: () {
+                    print('object');
+                  }),
+                  Container(
+                    color: Colors.white,
+                    width: _engine.effectiveWidth.toDouble() * 0.75,
+                    height: _engine.effectiveHeight.toDouble(),
+                    child: GridView.builder(
+                      padding: EdgeInsets.zero,
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: _engine.extent.toDouble(),
                       ),
-                      FloatingActionButton(
-                          child: const Icon(Icons.play_arrow),
-                          onPressed: () {
-                            _engine.spawn();
-                          }),
-                      const Text(
-                        '-START-',
-                        style: TextStyle(fontSize: 20.0),
-                      )
-                    ],
+                      itemBuilder: (_, index) {
+                        var _color = Colors.white;
+                        if (data.data != null && data.data!.pieces.length > 0) {
+                          _color = data.data!.pieces[index];
+                        }
+                        return ColoredBox(
+                          color: _color,
+                          child: Text(
+                            index.toString(),
+                            style: TextStyle(fontSize: 8),
+                          ),
+                        );
+                      },
+                      itemCount: _engine.getGridItemCount(),
+                    ),
                   ),
-                );
-              case GameState.Play:
-                return GridView.builder(
-                  padding: EdgeInsets.zero,
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: _engine.extent.toDouble(),
-                  ),
-                  itemBuilder: (_, index) {
-                    var _color = Colors.white;
-                    if (data.data != null && data.data!.pieces.length > 0) {
-                      _color = data.data!.pieces[index];
-                    }
-                    return ColoredBox(
-                      color: _color,
-                    );
-                  },
-                  itemCount: _engine.getGridItemCount(),
-                );
-              case GameState.End:
-                return const SizedBox.shrink();
-            }
-          } else
-            return const SizedBox.shrink();
-        },
-      ),
+                  FloatingActionButton.small(onPressed: () {}),
+                ],
+              );
+            case GameState.End:
+              return const SizedBox.shrink();
+          }
+        } else
+          return const SizedBox.shrink();
+      },
     );
   }
 }
