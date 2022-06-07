@@ -1,0 +1,204 @@
+On a very high level, a stream is basically an asynchronous flow of data from a source to a receiver. A stream can represent any event such as UI interactions(clicks), measures from a sensor all the way to changes in a variable. Since Reactive programming is a programming principle that deals with asynchronous data flow and their manipulation, streams are a very important pillar of this  programming style. In this tutorial, leveraging the help of RxDart, you’ll learn to stack and pop some blocks in a very simple game of Tetris.
+
+Along the way, you'll learn the following:
+<ul>
+<li>RxDart streams.</li>
+<li>Extension functions.</li>
+<li>Subjects.</li>
+<li>The concept of Backpressure.</li>
+</ul>
+
+<div class="note">
+<em>Note</em>: This tutorial assumes a basic knowledge of Dart and Flutter along with pre-installed plugins for VS Code. 
+</div>
+
+<h2>Getting Started</h2>
+Click the <em>Download Materials</em> button at the top or bottom of this tutorial to download the starter project. The starter project has a few models in place to represent the various states/events you will be manipulating using RxDart which are as follows:
+
+<strong>GameState</strong>: An enum to store the if the game has started, is being played or its over
+<strong>GameData</strong>:A model that represents the current state of the game and all the collected the tetriminos.
+<strong>Input</strong>: A model that represents change events that effect the current block in play. This includes xOffset, yOffset and angle,
+<strong>Piece</strong>: An enum represent the type of block from the available 7
+<strong>Tetrimino</strong>: A model that represents the current block that is being animated in the screen.
+
+Along with the models, the project contains a utility function collections, each tetris block painted using a custom painter class and classes for the board, the player and a layer that exclusively handles user interactions. 
+
+Build and run the app to see the output:
+<app screenshot>
+As of now, the Tetris board is just a white screen which you will use as a base for your stream based game. Lets get stacking!
+
+<h2>Reactive programming paradigm</h2>
+An Event is a general term used to represent the press of a button, or any of the many sensors in your device recording their data. Various components process this event to produce something  meaningful in the end. (Make updates in the UI for instance.) This  process is not a one time deal, however. As long as these events are  produced, the process repeats itself.  A “Stream” in programming is this flow of any raw input event to a useful result.
+
+All Streams have 2 required components. A source (ex. an event) and a sink or a receiver (a logical or an UI component that has the capability to consume such streams). Reactive programming is a programming style that uses such streams as a backbone to build applications that have a clearly defined source and a sink. Flutter offers built in support for streams using the <em>Stream</em> class. This class handles creating streams from various sources such as i/o updates, sensor data capture, UI event capture and much much more. On the other end, the sink can any component that has the power to consume the stream events. In the tutorial, you will be using the <em>StreamBuilder</em> widget to consume streams and make UI updates.
+
+Open <em>lib/board.dart</em> and replace <code>//TODO: add a stream builder</code> with the following code snippet.
+
+<pre lang="dart">
+      //1
+      child: StreamBuilder<Tetrimino>(
+        //2
+        stream: _engine.playerStream,
+        //3
+        builder: ((context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data?.current == Piece.Empty)
+              return const SizedBox.shrink();
+
+            return ClipRect(
+              child: CustomPaint(
+                painter:
+                    _getNextPiece(snapshot.data!, _engine.extent.toDouble()),
+                child: SizedBox(
+                  width: _engine.effectiveWidth.toDouble(),
+                  height: _engine.effectiveHeight.toDouble(),
+                ),
+              ),
+            );
+          }
+          return const SizedBox.shrink();
+        }),
+      ),
+</pre>
+
+Open <em>lib/engine.dart</em> and add the following snippet at the end of the class.
+
+<pre lang="dart">
+  Stream<Tetrimino> get playerStream => Stream.fromIterable(
+      [Tetrimino(current: Piece.I, origin: const Point(0, 0))]);
+</pre>
+Here is what is happening in the preceeding code snippets:
+1) The <code>StreamBuilder</code> that comes bundled with Flutter is being used as a sink that accepts events from a stream.
+2) The <code>_engine.playerStream()</code> getter creates a stream that returns a List of GameData items that dictate the state of the game.
+3) The <code>snapshot</code> variable references stream events and processes them. In this case, each event is converted to a <code>Text</code> widget.
+
+At this point, it may seem trivial, but as you go on you will implement the Reactive programming paradigm using RxDart to create a bare bones Tetris clone. 
+
+<h2>Rx streams</h2> 
+Dart <code>Stream</code> api fulfills the basic requirements to follow the Reactive programming style. To enhance it further, RxDart offers various new features that increase its usefulness in real world applications. As an example of this, consider the <code>Stream.fromIterable()</code> constructor used to create the <code>gridStateStream</code> . As simple it may be, you can improve it further by specifying the start and end of the iterable turn each numbers in between into events. The  <code>RangeStream</code> stream from RxDart fulfills this exact usecase.
+ 
+Replace <code>//TODO: replace with RangeStream</code> with the following code snippet.
+
+<pre lang="dart">
+  //TODO: replace with RangeStream
+  Stream<Tetrimino> get playerStream => RangeStream(
+          0, effectiveHeight ~/ extent)
+      .map((value) => Tetrimino(current: Piece.I, origin: const Point(0, 0)));
+</pre>
+
+Along with <code>RangeStream</code>, RxDart also offers various other types of "pre-built" streams. For instance, the <code>TimerStream</code> emits an event after the specified duration. 
+
+<h2>Extensions</h2>
+The <code>map</code> function at the end of code snippet above is an example of an extension function. Extension functions are useful when you have an usecase where you need to  manipulate the event before it reaches the sink. For example what if from a stream that emits integer values, you only need odd events or you need to create a gap between each event emitted in a stream. This is exactly what the <code>map</code> function is doing. Taking each integer and transforming it into a Tetrimino. These functions have the power to transform the emitted events in any way shape or form and can even create other streams from the events.    
+
+<div class="note">
+<em>Note</em>: A higher-order stream is a special stream that emits other streams. More on them later.
+</div>
+
+Let's make the previous example a bit more exciting using the <code>interval</code> extension. This function basically emits <em>event</em> of the stream after the specified time interval. 
+Add the following after <code>RangeStream</code> in the previous code snippet.
+
+<pre lang="dart">
+stream: RangeStream(0,5).interval(const Duration(millisecond : 500)),
+</pre>
+
+As you can see, you are not limited to just one extension between the source and a stream. You can chain Multiple extension functions to manipulate the data between the source and the sink. Chaining various extensions functions one after the other is an important part of Reactive programming used to achieve high degrees of data manipulation that is easy to follow. 
+
+The <code>interval</code> function and <code>map</code> are just the tip of the iceberg when it comes to extension functions in RxDart. Other useful examples include:
+1)<code>delay</code>: emits the stream events after a specified delay.
+2)<code>doOn_</code>: These are various extensions that specify various callbacks at the different points of the stream lifecycle. For example,  the <code>doOnData</code> callback triggers on new events, while the <code>doOnDone</code> callback triggers on stream completion. 
+3) <code>startWith</code>/<code>endWith</code>: These extension functions allow adding an event at the beginning or the end of a stream. 
+ 
+You now have a portion of a basic Tetris game with a block animating from the top of the board to its end. Let's see how you can now add more features like moving the blocks with user input and randomizing the block creation once the previous block reaches the end of the board.
+
+<h2>Combining Streams</h2>
+The <code>RangeStream</code> you have been using up to this point is only meant to move the Tetrimino. The game now has to generate another random Tetrimino to continue and also handle user input so that you can control the trajectory of the block while it travels down the board.
+
+<h3>Generating new blocks</h3>
+The game needs to generate a new Tetrimino whener the current Tetrimino is either blocked by the bounds of the board or another Tetrimino. This new tetrimino will logically be the same as the previous tetrimino. A <code>RangeStream</code> with its events mapped to new positions in the board. Only this time, you need to create a new stream that listens to events that represent new blocks and returns a <code>RangeStream</code> that helps animate the new block.
+
+Add the following code snippet at the start of Engine class.
+
+<pre lang="dart">
+final StreamController<Tetrimino> _playerController = StreamController();
+</pre> 
+
+This line of code creates a StreamController that manages a stream for all the Tetriminos that are user controllable. More on them later. So how can you create a new stream from the events of another stream? RxDart provides various options for this use case. One of the options you will be using is <code>switchMap</code> which converts events of a stream to new streams using a mapper function. On each new Tetrimino event of the <code>_playerController.stream</code> you can add convert it to a RangeStream() which you saw in action before.     
+
+Now that the tetrimino are endlessly generated on the end of each round, lets talk user input. 
+ 
+<h3>Taking user input</h3>
+How do you factor in user input which is what makes games interesting. The answer is using the <code>StreamController</code> from the Dart Stream API. <code>StreamController</code> allows you  to create a <code>Stream</code> to which you can add events and other components can listen to for updates. It also exposes various meta information about the stream itself such as state and no. of subscribers. 
+
+Add the following code snippet to the top of the Engine class
+
+<pre lang="dart">
+final StreamController<UserInput> _inputController = StreamController();
+</pre> 
+
+You now have a StreamController that can handle user input events. Next, to actually create the input events, add the following code snippet to the Engine class.
+
+<pre lang="dart">
+  void movePiece(int direction) {
+    _inputController
+        .add(UserInput(angle: 0, xOffset: direction == 0 ? -1 : 1, yOffset: 0));
+  }
+</pre> 
+
+<pre lang="dart">
+  void rotatePiece() {
+    _inputController.add(UserInput(angle: 90, xOffset: 0, yOffset: 0));
+  }
+</pre> 
+
+These two functions create the translation and rotation events that change the path and angle of the current Tetrimino. 
+
+Combining <code>RangeStream</code> and the stream exposed by <code>_inputController</code>, you can now control the Tetrimino as it travels down the board. Along with different "pre-built" streams, RxDart also provides certain streams that take other streams as inputs as well as extension functions that take events from their input stream to create more streams. Let's use this feature to add the user input functionality. 
+
+<code>CombineLatestStream.combine2</code> is a stream that takes two other streams as input and creates a third stream using the latest events from both its input stream. 
+
+<h2>Subjects</h2>
+However, there is a certain error that has now appeared in the console.
+
+<div class="note">
+"Unhandled Exception: Bad state: Stream has already been listened to."
+</div>
+
+This message is as straight forward as it gets. In the default case, StreamControllers by default allow their streams to only have one listener. Such streams are also known as Single-subscription streams. On the other hand, Broadcast streams allow multiple listeners. You need to use the <code>StreamController.broadcast()</code> constructor to use them.
+
+<h2>BehaviorSubject</h2>
+As is the case with the native Dart Stream API, RxDart also offers an improvement over StreamControllers in the form of <code>BehaviorSubject</code>. They offer all the functionality of a StreamController but differ in the fact that they  manage broardcast streams by default. So, to solve the problem you encountered earlier, you can just simply replace the <code>StreamController</code> construction invocation with a <code>BehaviorSuject</code>. 
+
+<pre lang="dart">
+  final StreamController<Tetrimino> _playerController = BehaviorSubject();
+  final StreamController<GameData> _gameController = BehaviorSubject();
+  final StreamController<UserInput> _inputController = BehaviorSubject();
+</pre>
+
+<h2>Seeded BehaviorSubjects</h2>
+Besides handling broadcast streams by default, BehaviorSubjects also support seed values. Seed values are the first events transmitted when you initialize BehaviorSubjects. In the case of the Tetris game, you can use them to represent a start screen for the game.  
+
+<h2>Introduction to Backpressure</h2>
+The whole style of reactive programming is useful for developers since the UI can only subscribe to the streams they want to listen to. This promotes the "Seperation of Concerns" idea  that is very crucial when developing. Of course, this unique style also contains issues that unique to it as well. For instance, lets  talk about what happens in a source/sink structure of streams, the source is a lot faster than the sink. That is, the sink finishes processing the events at a much slower rate than the source is creating events. 
+
+A real world famous example of this, is the search bar component. As the user types the query, the components may need to present suggestions. If you use an API to back the suggestion functionality that takes the query as a parameter, there will be a certain amount of delay until you receive a response. If this delay proves to be greater than the time it takes for the keyword to change, the response returned may be useless for certain search queries. In order words, you are making unecessary network calls. In terms of streams, the keyword changes are the source and the responses from the API are the sink. The source in this case (keyword changes) is a lot faster than the sink(api response). Reactive programming uses the term "Backpressure" and RxDart offers various operators to deal with it. 
+
+A great and example of a backpressure immune operator is <code>debounceTime</code>. This extension function only emit events from the source stream whenever the time span defined by the input duration passes, without the source stream emitting another event.
+
+<h2>Where to Go From Here?</h2>
+Download the final project by clicking the <em>Download Materials</em> button at the top or bottom of this tutorial. You have gotten an introduction to the existing Dart Stream api and the role of RxDart in augmenting it using the following concepts:
+<ul>
+<li><em>Rx Streams</em>: Constrains the content even if the parent does not impose any constraints on it.</li>
+<li><em>Subjects</em>: Imposes constraints different from the ones set by the parent widget.</li>
+<li><em>Extension chains</em>: Scales content according to the size of the parent widget.</li>
+<li><em>Backpressure</em>: Ensures the content occupies the available space either vertically or horizontally.</li>
+</ul>
+
+To dive deeper, check out the following resources
+<ul>
+<li>Visit the Dart docs on <a href="https://dart.dev/codelabs/async-await" rel="noopener" target="\_blank">Asynchronous programming</a> to learn about its nuances</li>
+<li>Learn about <a href="https://pub.dev/packages/rxdart" rel="noopener" target="\_blank">RxDart </a> to learn about all the extension functions and subjects it provides.</li>
+<li>To strengthen your understanding of Rx, there is probably greater resource than <a href="https://rxmarbles.com/" rel="noopener" target="\_blank">Rx Marbles.</a> It has interactive diagrams that help you understand how different streams operate. Also as a plus point, almost every stream mentioned in the RxDart docs has a corresponding marble diagram. Neat!</li>
+</ul>
+
+If you have any questions, comments or suggestions, feel free to join the discussion below!
