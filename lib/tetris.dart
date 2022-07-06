@@ -26,8 +26,8 @@ import 'package:flutter/widgets.dart';
 
 import 'board.dart';
 import 'engine.dart';
+import 'game_layer.dart';
 import 'player.dart';
-import 'user_interaction_layer.dart';
 
 class TetrisController extends InheritedWidget {
   final Engine engine;
@@ -52,21 +52,11 @@ class Tetris extends StatelessWidget {
   const Tetris({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final _engine = TetrisController.of(context);
-    return Stack(
-      children: [
-        const Center(child: TetrisBoard()),
-        const Player(),
-        UserInteractionLayer(
-          onClick: (side) {
-            _engine.movePiece(side);
-          },
-          onDoubleClick: () {
-            _engine.rotatePiece();
-          },
-        )
-      ],
-    );
-  }
+  Widget build(BuildContext context) => Stack(
+        children: [
+          const Center(child: TetrisBoard()),
+          const Player(),
+          const GameLayer(),
+        ],
+      );
 }

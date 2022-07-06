@@ -44,7 +44,7 @@ class ZBlock extends CustomPainter {
     Path path;
     if (angle == 90) {
       path = Path()
-        ..moveTo(origin.x + width * 2, origin.y)
+        ..moveTo(origin.x + width * 1, origin.y)
         ..relativeLineTo(width, 0)
         ..relativeLineTo(0, width * 2)
         ..relativeLineTo(-width, 0)

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.raywenderlich.streamysnake">
+    package="com.ayush.tetris">
    <application
-        android:label="streamysnake"
+        android:label="Tetris"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

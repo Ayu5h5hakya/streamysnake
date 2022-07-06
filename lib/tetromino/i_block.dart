@@ -42,7 +42,7 @@ class IBlock extends CustomPainter {
     Path path;
     if (angle == 90 || angle == 270) {
       path = Path()
-        ..moveTo(origin.x + width * 2, origin.y)
+        ..moveTo(origin.x, origin.y)
         ..relativeLineTo(width, 0)
         ..relativeLineTo(0, width * 4)
         ..relativeLineTo(-width, 0)

@@ -42,8 +42,9 @@ class Engine {
   int _itemCount = 0;
   int getGridItemCount() => _itemCount;
 
-  final StreamController<Tetrimino> _playerController = BehaviorSubject();
-  final StreamController<UserInput> _inputController = BehaviorSubject();
+  final StreamController<Tetrimino> _playerController = StreamController();
+  final StreamController<UserInput> _inputController =
+      StreamController.broadcast();
   final StreamController<GameData> _gameController =
       BehaviorSubject.seeded(GameData(state: GameState.Start, pieces: []));
 
@@ -55,55 +56,81 @@ class Engine {
     _setPieces.addAll(List.filled(_itemCount, Colors.white));
   }
 
-  Stream<Tetrimino> get playerStream => _playerController.stream.switchMap(
-        (base) {
-          var _current = base;
-          return CombineLatestStream.combine2<UserInput, int, Tetrimino>(
-            _inputController.stream
-                .startWith(UserInput(angle: 0, xOffset: 0, yOffset: 0))
-                .map((input) => UserInput(
-                    angle: _current.angle.toInt() + input.angle,
-                    xOffset: _current.xOffset.toInt() + input.xOffset,
-                    yOffset: _current.yOffset.toInt() + input.yOffset)),
-            _playerController.stream.switchMap((value) =>
-                RangeStream(0, effectiveHeight ~/ extent)
-                    .interval(const Duration(milliseconds: 500))),
-            (userInput, yOffset) => Tetrimino(
-              angle: (userInput.angle).toDouble(),
-              current: _current.current,
-              origin: Point(_current.origin.x, _current.origin.y),
-              yOffset: yOffset.toDouble(),
-              xOffset: (userInput.xOffset).toDouble(),
-            ),
-          ).takeWhile((_transformedPiece) {
-            final _nextIndexes =
-                mapToGridIndex(_transformedPiece, extent, COL_COUNT);
-            final _isPieceInsideTheBoard =
-                !_nextIndexes.any((index) => index > _itemCount);
-            final _isNextPositionCollisionFree =
-                !_nextIndexes.any((item) => _setPieces[item] != Colors.white);
-            return _isPieceInsideTheBoard && _isNextPositionCollisionFree;
-          }).doOnData((_validTransformedPiece) {
-            _current = _validTransformedPiece;
-          }).doOnDone(() {
-            final _indexes = mapToGridIndex(_current, extent, COL_COUNT);
-            _setPieces[_indexes[0]] = _current.color!;
-            _setPieces[_indexes[1]] = _current.color!;
-            _setPieces[_indexes[2]] = _current.color!;
-            _setPieces[_indexes[3]] = _current.color!;
+  Stream<Tetrimino> get blankPlayerStream {
+    return Stream.value(Tetrimino(current: Piece.I, origin: const Point(0, 0)));
+  }
 
-            if (isSetPieceAtTheTop(_setPieces, COL_COUNT)) {
-              _gameController.add(GameData(state: GameState.End, pieces: []));
-              _playerController.add(
-                  Tetrimino(current: Piece.Empty, origin: const Point(0, 0)));
-            } else {
-              _gameController
-                  .add(GameData(state: GameState.Play, pieces: _setPieces));
-              _spawn();
-            }
-          });
-        },
-      );
+  Stream<Tetrimino> staticPlayerStream() {
+    return RangeStream(0, effectiveHeight ~/ extent - 1).map((value) =>
+        Tetrimino(
+            current: Piece.I, origin: Point(0, value * extent.toDouble())));
+  }
+
+  Stream<Tetrimino> animatingPlayerStream() {
+    return RangeStream(0, effectiveHeight ~/ extent - 1)
+        .interval(const Duration(milliseconds: 500))
+        .map((value) => Tetrimino(
+            current: Piece.I, origin: Point(0, value * extent.toDouble())));
+  }
+
+  Stream<Tetrimino> animatingPlayerWithCompletionStream() {
+    return animatingPlayerStream()
+        .takeWhile((_transformedPiece) => _canTetriminoMove(_transformedPiece))
+        .doOnDone(() {
+      _onTetriminoSet(Tetrimino(
+          current: Piece.I,
+          yOffset: (effectiveHeight ~/ extent - 1).toDouble(),
+          origin: const Point(0, 0)));
+    });
+  }
+
+  Stream<Tetrimino> infiniteAnimatingPlayerWithCompletionStream() {
+    return _playerController.stream.switchMap((value) {
+      var _current = value;
+      return RangeStream(0, effectiveHeight ~/ extent - 1)
+          .interval(const Duration(milliseconds: 500))
+          .map(
+            (value) => Tetrimino(
+              angle: 0.0,
+              current: _current.current,
+              origin: const Point(0, 0),
+              yOffset: value.toDouble(),
+              xOffset: 0,
+            ),
+          )
+          .takeWhile(
+            (_transformedPiece) => _canTetriminoMove(_transformedPiece),
+          )
+          .doOnData((_validTransformedPiece) {
+        _current = _validTransformedPiece;
+      }).doOnDone(() {
+        _onTetriminoSet(_current);
+      });
+    });
+  }
+
+  Stream<Tetrimino> infiniteAnimatingPlayerWithCompletionStreamWithInput() {
+    return _playerController.stream.switchMap((value) {
+      var _current = value;
+      return CombineLatestStream.combine2<UserInput, int, Tetrimino>(
+        _inputController.stream
+            .debounceTime(const Duration(seconds: 1))
+            .startWith(UserInput(angle: 0, xOffset: 0, yOffset: 0))
+            .map((input) => _offsetUserInput(input, _current)),
+        RangeStream(0, effectiveHeight ~/ extent - 1)
+            .interval(const Duration(milliseconds: 500)),
+        (userInput, yOffset) =>
+            _transformedTetrimino(_current, userInput, yOffset),
+      )
+          .takeWhile(
+              (_transformedPiece) => _canTetriminoMove(_transformedPiece))
+          .doOnData((_validTransformedPiece) {
+        _current = _validTransformedPiece;
+      }).doOnDone(() {
+        _onTetriminoSet(_current);
+      });
+    });
+  }
 
   Stream<GameData> get gridStateStream {
     return _gameController.stream.flatMap((data) {
@@ -132,13 +159,14 @@ class Engine {
       Piece.L,
     ];
 
-    _inputController.add(UserInput(angle: 0, xOffset: 0, yOffset: 0));
-    _playerController.add(Tetrimino(
-      current: _availablePieces[Random().nextInt(_availablePieces.length)],
-      angle: 90,
-      origin:
-          Point<double>(Random().nextInt(COL_COUNT - 4).toDouble() * extent, 0),
-    ));
+    _playerController.add(
+      Tetrimino(
+        current: _availablePieces[Random().nextInt(7)],
+        angle: 0,
+        origin: Point<double>(
+            Random().nextInt(COL_COUNT - 4).toDouble() * extent, 0),
+      ),
+    );
   }
 
   void spawn() {
@@ -146,14 +174,60 @@ class Engine {
     _spawn();
   }
 
-  void movePiece(int direction) {
-    _inputController
-        .add(UserInput(angle: 0, xOffset: direction == 0 ? -1 : 1, yOffset: 0));
+  void moveLeft() {
+    _inputController.add(UserInput(angle: 0, xOffset: -1, yOffset: 0));
+  }
+
+  void moveRight() {
+    _inputController.add(UserInput(angle: 0, xOffset: 1, yOffset: 0));
   }
 
   void rotatePiece() {
     _inputController.add(UserInput(angle: 90, xOffset: 0, yOffset: 0));
   }
+
+  bool _canTetriminoMove(Tetrimino piece) {
+    final _nextIndexes = mapToGridIndex(piece, extent, COL_COUNT);
+    final _isPieceInsideTheBoard =
+        !_nextIndexes.any((index) => index > _itemCount);
+    final _isNextPositionCollisionFree =
+        !_nextIndexes.any((item) => _setPieces[item] != Colors.white);
+    return _isPieceInsideTheBoard && _isNextPositionCollisionFree;
+  }
+
+  void _onTetriminoSet(Tetrimino piece) {
+    final _indexes = mapToGridIndex(piece, extent, COL_COUNT);
+    _setPieces[_indexes[0]] = piece.color!;
+    _setPieces[_indexes[1]] = piece.color!;
+    _setPieces[_indexes[2]] = piece.color!;
+    _setPieces[_indexes[3]] = piece.color!;
+    if (isSetPieceAtTheTop(_setPieces, COL_COUNT)) {
+      _gameController.add(GameData(state: GameState.End, pieces: []));
+    } else {
+      _gameController.add(GameData(state: GameState.Play, pieces: _setPieces));
+      _spawn();
+    }
+  }
+
+  UserInput _offsetUserInput(UserInput input, Tetrimino piece) {
+    final _isPieceOutsideBoundary =
+        isPieceHorizontallyInside(piece, input.xOffset, extent, COL_COUNT);
+    return UserInput(
+        angle: piece.angle.toInt() + input.angle,
+        xOffset: piece.xOffset.toInt() +
+            (_isPieceOutsideBoundary ? 0 : input.xOffset),
+        yOffset: piece.yOffset.toInt() + input.yOffset);
+  }
+
+  Tetrimino _transformedTetrimino(
+          Tetrimino piece, UserInput userInput, int yOffset) =>
+      Tetrimino(
+        angle: (userInput.angle).toDouble(),
+        current: piece.current,
+        origin: Point(piece.origin.x, piece.origin.y),
+        yOffset: yOffset.toDouble(),
+        xOffset: (userInput.xOffset).toDouble(),
+      );
 
   void resetGame() {
     _setPieces.clear();

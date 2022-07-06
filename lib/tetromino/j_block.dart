@@ -44,7 +44,7 @@ class JBlock extends CustomPainter {
     Path path;
     if (angle == 90) {
       path = Path()
-        ..moveTo(origin.x + width, origin.y)
+        ..moveTo(origin.x, origin.y)
         ..relativeLineTo(width * 2, 0)
         ..relativeLineTo(0, width)
         ..relativeLineTo(-width, 0)

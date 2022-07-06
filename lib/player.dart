@@ -44,8 +44,11 @@ class Player extends StatelessWidget {
   Widget build(BuildContext context) {
     final _engine = TetrisController.of(context);
     return Center(
+      //1
       child: StreamBuilder<Tetrimino>(
-        stream: _engine.playerStream,
+        //2
+        stream: _engine.infiniteAnimatingPlayerWithCompletionStreamWithInput(),
+        //3
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data?.current == Piece.Empty)

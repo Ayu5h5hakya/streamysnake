@@ -23,6 +23,7 @@
 // THE SOFTWARE.
 
 import 'package:flutter/material.dart';
+
 import 'engine.dart';
 import 'tetris.dart';
 
@@ -41,8 +42,6 @@ class Game extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: Builder(builder: (ctx) {
-          // final _width = MediaQuery.of(ctx).size.width * 0.7;
-          // final _height = MediaQuery.of(ctx).size.height * 0.75;
           return Scaffold(
             backgroundColor: Colors.black54,
             body: TetrisController(
